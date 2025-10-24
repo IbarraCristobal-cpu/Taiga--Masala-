@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Reporte de Ventas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --admin-bg: #f4f7fa;
+        --admin-panel-bg: #ffffff;
+        --admin-text: #333;
+        --admin-header: #2c3e50;
+        --admin-primary-action: #28a745;
+        --admin-border: #dee2e6;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: var(--admin-bg);
+        color: var(--admin-text);
+        margin: 0;
+      }
+
+      .admin-navbar {
+        background-color: var(--admin-header);
+        color: white;
+        padding: 0.8em 1.5em;
+        font-size: 0.9em;
+        font-weight: 500;
+      }
+      .admin-navbar a {
+        color: white;
+        text-decoration: none;
+        margin: 0 0.5em;
+      }
+
+      .report-main-content {
+        background-color: var(--admin-panel-bg);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        max-width: 960px;
+        margin: 2em auto;
+        padding: 1.5em 2em;
+        overflow: hidden;
+      }
+
+      .report-header h2 {
+        margin: 0;
+        font-size: 1.5em;
+      }
+      .report-header p {
+        margin: 0.2em 0 1.5em 0;
+        color: #6c757d;
+        border-bottom: 1px solid var(--admin-border);
+        padding-bottom: 1.5em;
+      }
+
+      .report-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5em;
+        flex-wrap: wrap;
+        gap: 1em;
+      }
+
+      .export-btn {
+        background-color: var(--admin-primary-action);
+        color: white;
+        border: none;
+        padding: 0.7em 1.2em;
+        border-radius: 5px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .export-btn:hover {
+        background-color: #218838;
+      }
+
+      .sort-control select {
+        padding: 0.6em;
+        border: 1px solid var(--admin-border);
+        border-radius: 5px;
+        font-size: 0.9em;
+      }
+
+      /* Lista del Reporte  */
+      .report-list ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .report-list li {
+        display: flex;
+        align-items: center;
+        padding: 0.8em 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .item-name {
+        flex-grow: 1;
+      }
+      .item-separator {
+        flex-grow: 2;
+        border-bottom: 2px dotted #ccc;
+        margin: 0 1em;
+        height: 1px;
+      }
+      .item-value {
+        font-weight: 700;
+        min-width: 150px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="admin-navbar">
+      <a href="B13_B14-Reporte_de_venta.html">Reporte</a> |
+      <a href="B15-Moderacion_de_reseñas.html">Reseñas</a> |
+      <a href="B16-Carga_de_Producto.html">Carga Producto</a> |
+      <a href="B17-Gestion_de_Productos.html">Gestionar Produccto</a>
+    </nav>
+
+    <div class="report-main-content">
+      <div class="report-header">
+        <h2>Platos Mas Vendidos</h2>
+        <p>Reporte de ventas (Ultimo Mes)</p>
+      </div>
+
+      <div class="report-controls">
+        <button id="export-btn" class="export-btn">
+          Exportar reporte a Excel
+        </button>
+        <div class="sort-control">
+          <label for="sort-select">Ordenar por: </label>
+          <select id="sort-select">
+            <option value="unidades" selected>Unidades</option>
+            <option value="ingresos">Ingresos</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="report-list" class="report-list"></div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const salesData = [
+          { name: "Plato C", unidades: 115, ingresos: 355438 },
+          { name: "Plato A", unidades: 150, ingresos: 432628 },
+          { name: "Plato F", unidades: 88, ingresos: 220184 },
+          { name: "Plato D", unidades: 102, ingresos: 295506 },
+          { name: "Plato H", unidades: 72, ingresos: 145438 },
+          { name: "Plato B", unidades: 134, ingresos: 398543 },
+          { name: "Plato E", unidades: 91, ingresos: 250528 },
+          { name: "Plato G", unidades: 78, ingresos: 197253 },
+        ];
+
+        const sortSelect = document.getElementById("sort-select");
+        const reportListContainer = document.getElementById("report-list");
+        const exportBtn = document.getElementById("export-btn");
+        let currentSortBy = "unidades";
+
+        const formatCurrency = (value) =>
+          new Intl.NumberFormat("es-CL", {
+            style: "currency",
+            currency: "CLP",
+          }).format(value);
+
+        const renderReport = () => {
+          const sortedData = [...salesData].sort(
+            (a, b) => b[currentSortBy] - a[currentSortBy]
+          );
+          let listHtml = "<ul>";
+          sortedData.forEach((item) => {
+            const value =
+              currentSortBy === "unidades"
+                ? `${item.unidades} unidades vendidas`
+                : `${formatCurrency(item.ingresos)} generados`;
+            listHtml += `
+                        <li>
+                            <span class="item-name">${item.name}</span>
+                            <span class="item-separator"></span>
+                            <span class="item-value">${value}</span>
+                        </li>`;
+          });
+          listHtml += "</ul>";
+          reportListContainer.innerHTML = listHtml;
+        };
+
+        sortSelect.addEventListener("change", (event) => {
+          currentSortBy = event.target.value;
+          renderReport();
+        });
+
+        exportBtn.addEventListener("click", () => {
+          const sortedData = [...salesData].sort(
+            (a, b) => b[currentSortBy] - a[currentSortBy]
+          );
+          const headers = [
+            "Plato",
+            currentSortBy === "unidades"
+              ? "Unidades Vendidas"
+              : "Ingresos Generados",
+          ];
+          let csvContent = headers.join(",") + "\r\n";
+          sortedData.forEach((item) => {
+            csvContent += [item.name, item[currentSortBy]].join(",") + "\r\n";
+          });
+          const blob = new Blob([csvContent], {
+            type: "text/csv;charset=utf-8;",
+          });
+          const link = document.createElement("a");
+          const url = URL.createObjectURL(blob);
+          link.setAttribute("href", url);
+          link.setAttribute("download", "reporte_ventas.csv");
+          link.style.visibility = "hidden";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+
+        renderReport();
+      });
+    </script>
+  </body>
+</html>

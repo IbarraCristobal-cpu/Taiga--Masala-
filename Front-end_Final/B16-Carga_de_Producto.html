@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Carga de Productos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --admin-bg: #f4f7fa;
+        --admin-panel-bg: #ffffff;
+        --admin-text: #333;
+        --admin-header: #2c3e50;
+        --admin-primary-action: #007bff;
+        --admin-border: #dee2e6;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: var(--admin-bg);
+        color: var(--admin-text);
+        margin: 0;
+      }
+
+      .admin-navbar {
+        background-color: var(--admin-header);
+        color: white;
+        padding: 0.8em 1.5em;
+        font-size: 0.9em;
+        font-weight: 500;
+      }
+      .admin-navbar a {
+        color: white;
+        text-decoration: none;
+        margin: 0 0.5em;
+      }
+
+      .upload-main-content {
+        background-color: var(--admin-panel-bg);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        max-width: 960px;
+        margin: 2em auto;
+        padding: 1.5em 2em;
+        overflow: hidden;
+      }
+
+      .upload-title {
+        font-size: 1.5em;
+        margin: 0 0 1.5em 0;
+        padding-bottom: 0.5em;
+        border-bottom: 1px solid var(--admin-border);
+      }
+
+      /* Sección de Plantilla  */
+      .template-section {
+        border: 1px solid var(--admin-border);
+        border-radius: 8px;
+        padding: 1em;
+        text-align: center;
+        margin-bottom: 2em;
+        background-color: #f8f9fa;
+      }
+      .template-section h3 {
+        margin: 0 0 0.5em 0;
+      }
+      .template-section p {
+        margin: 0 0 1em 0;
+        color: #6c757d;
+        font-size: 0.9em;
+      }
+      .template-download-btn {
+        display: inline-block;
+        background: #e9ecef;
+        border: 1px solid var(--admin-border);
+        padding: 0.8em;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        color: var(--admin-text);
+        font-weight: 500;
+      }
+      .template-download-btn:hover {
+        background-color: #dee2e6;
+      }
+      .template-download-btn span {
+        font-size: 2em;
+        display: block;
+      }
+
+      /* Sección de Carga */
+      .upload-area {
+        border: 2px dashed var(--admin-border);
+        border-radius: 8px;
+        padding: 2.5em;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.2s, border-color 0.2s;
+        margin-bottom: 2em;
+        display: block;
+        position: relative;
+        overflow: hidden;
+      }
+      .upload-area.drag-over {
+        background-color: #e9f5ff;
+        border-color: var(--admin-primary-action);
+      }
+
+      .upload-area p {
+        margin: 0.5em 0;
+        color: #6c757d;
+      }
+      /* Ocultar Csv*/
+      #csv-file-input {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        overflow: hidden;
+        z-index: -1;
+        margin: 0;
+        padding: 0;
+        border: none;
+      }
+      #file-name {
+        font-weight: 700;
+        color: var(--admin-primary-action);
+        margin-top: 1em;
+        display: block;
+        min-height: 1.2em;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 1em;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: 700;
+        cursor: pointer;
+        background-color: var(--admin-primary-action);
+        color: white;
+        transition: background-color 0.2s;
+        margin-top: 0;
+      }
+      .submit-btn:hover {
+        background-color: #0069d9;
+      }
+      .submit-btn:disabled {
+        background-color: #a0a0a0;
+        cursor: not-allowed;
+      }
+
+      #upload-form {
+        margin: 0;
+      }
+      #file-name {
+        font-weight: 700;
+        color: var(--admin-primary-action);
+        margin-top: 0.5em;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 1em;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: 700;
+        cursor: pointer;
+        background-color: var(--admin-primary-action);
+        color: white;
+        transition: background-color 0.2s;
+      }
+      .submit-btn:hover {
+        background-color: #0069d9;
+      }
+      .submit-btn:disabled {
+        background-color: #a0a0a0;
+        cursor: not-allowed;
+      }
+
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+      .modal-content {
+        background: white;
+        padding: 2em;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        min-width: 300px;
+      }
+      .modal-content h3 {
+        margin-top: 0;
+      }
+      .modal-content p {
+        margin-bottom: 1.5em;
+      }
+      .modal-content button {
+        margin-top: 1em;
+        padding: 0.6em 2em;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background: #eee;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="admin-navbar">
+      <a href="B13_B14-Reporte_de_venta.html">Reporte</a> |
+      <a href="B15-Moderacion_de_reseñas.html">Reseñas</a> |
+      <a href="B16-Carga_de_Producto.html">Carga Producto</a> |
+      <a href="B17-Gestion_de_Productos.html">Gestionar Produccto</a>
+    </nav>
+
+    <div class="upload-main-content">
+      <h2 class="upload-title">Carga de Productos</h2>
+
+      <div class="template-section">
+        <h3>Descargar Plantilla CSV</h3>
+        <p>
+          Descarga la plantilla para asegurar el formato correcto de los datos.
+        </p>
+        <a href="#" id="download-template-btn" class="template-download-btn">
+          <span>📄</span>
+          Descargar Plantilla
+        </a>
+      </div>
+
+      <form id="upload-form">
+        <label for="csv-file-input" id="drop-area" class="upload-area">
+          <p><strong>Selecciona un archivo CSV desde tu computadora</strong></p>
+          <p>o arrastra y suelta el archivo aquí</p>
+          <p id="file-name"></p>
+        </label>
+        <input type="file" id="csv-file-input" accept=".csv" />
+        <button type="submit" id="submit-btn" class="submit-btn" disabled>
+          Subir y Procesar Archivo
+        </button>
+      </form>
+    </div>
+
+    <div id="feedback-modal" class="modal-overlay" style="display: none">
+      <div class="modal-content">
+        <h3 id="modal-title"></h3>
+        <p id="modal-message"></p>
+        <button id="modal-ok-btn">OK</button>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const uploadForm = document.getElementById("upload-form");
+        const fileInput = document.getElementById("csv-file-input");
+        const dropArea = document.getElementById("drop-area");
+        const fileNameDisplay = document.getElementById("file-name");
+        const submitBtn = document.getElementById("submit-btn");
+        const downloadTemplateBtn = document.getElementById(
+          "download-template-btn"
+        );
+        const feedbackModal = document.getElementById("feedback-modal");
+        const modalTitle = document.getElementById("modal-title");
+        const modalMessage = document.getElementById("modal-message");
+        const modalOkBtn = document.getElementById("modal-ok-btn");
+
+        let selectedFile = null;
+
+        downloadTemplateBtn.addEventListener("click", (event) => {
+          event.preventDefault();
+          const csvContent =
+            "Nombre,Precio,Stock,Categoria\nPlato de Ejemplo,9990,50,Platos Fuertes\nOtro Plato,5990,30,Entradas\n";
+          const blob = new Blob([csvContent], {
+            type: "text/csv;charset=utf-8;",
+          });
+          const link = document.createElement("a");
+          const url = URL.createObjectURL(blob);
+          link.setAttribute("href", url);
+          link.setAttribute("download", "plantilla_productos.csv");
+          link.style.visibility = "hidden";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+
+        ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+          dropArea.addEventListener(
+            eventName,
+            (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            },
+            false
+          );
+        });
+        ["dragenter", "dragover"].forEach((eventName) => {
+          dropArea.addEventListener(
+            eventName,
+            () => dropArea.classList.add("drag-over"),
+            false
+          );
+        });
+        ["dragleave", "drop"].forEach((eventName) => {
+          dropArea.addEventListener(
+            eventName,
+            () => dropArea.classList.remove("drag-over"),
+            false
+          );
+        });
+        dropArea.addEventListener("drop", (e) => {
+          handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener("change", (e) => {
+          handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+          if (file && file.type === "text/csv") {
+            selectedFile = file;
+            fileNameDisplay.textContent = `Archivo seleccionado: ${file.name}`;
+            submitBtn.disabled = false;
+          } else {
+            fileNameDisplay.textContent =
+              "Archivo no válido. Por favor, selecciona un archivo .csv";
+            selectedFile = null;
+            submitBtn.disabled = true;
+          }
+        }
+
+        uploadForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          if (!selectedFile) return;
+
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const text = e.target.result;
+            const rows = text
+              .split(/[\r\n]+/)
+              .filter((row) => row.trim().length > 0);
+
+            if (rows.length < 2) {
+              modalTitle.textContent = "Archivo vacío o inválido";
+              modalMessage.textContent =
+                "El archivo no contiene productos para cargar.";
+              feedbackModal.style.display = "flex";
+              return;
+            }
+
+            const totalProductsInFile = rows.length - 1;
+            let loadedProducts = 0;
+
+            for (let i = 1; i < rows.length; i++) {
+              const columns = rows[i].split(",");
+              if (
+                columns.length === 4 &&
+                columns.every((col) => col.trim().length > 0)
+              ) {
+                loadedProducts++;
+              }
+            }
+
+            if (loadedProducts === totalProductsInFile) {
+              modalTitle.textContent = "Carga Exitosa";
+              modalMessage.textContent = `${loadedProducts} de ${totalProductsInFile} productos cargados correctamente.`;
+            } else {
+              modalTitle.textContent = "Carga Fallida";
+              modalMessage.textContent = `${loadedProducts} de ${totalProductsInFile} productos cargados.`;
+            }
+            feedbackModal.style.display = "flex";
+          };
+
+          reader.onerror = function () {
+            modalTitle.textContent = "Error de Lectura";
+            modalMessage.textContent =
+              "No se pudo leer el archivo seleccionado.";
+            feedbackModal.style.display = "flex";
+          };
+
+          reader.readAsText(selectedFile);
+        });
+
+        modalOkBtn.addEventListener("click", () => {
+          feedbackModal.style.display = "none";
+          selectedFile = null;
+          fileNameDisplay.textContent = "";
+          submitBtn.disabled = true;
+          uploadForm.reset();
+          dropArea.classList.remove("drag-over");
+        });
+      });
+    </script>
+  </body>
+</html>

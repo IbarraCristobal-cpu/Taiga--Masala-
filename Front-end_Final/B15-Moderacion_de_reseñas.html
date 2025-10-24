@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Moderación de Reseñas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* --- Estilos Generales Admin --- */
+      :root {
+        --admin-bg: #f4f7fa;
+        --admin-panel-bg: #ffffff;
+        --admin-text: #333;
+        --admin-header: #2c3e50;
+        --admin-action-approve: #28a745;
+        --admin-action-reject: #d9534f;
+        --admin-border: #dee2e6;
+        --star-color: #fdd835;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: var(--admin-bg);
+        color: var(--admin-text);
+        margin: 0;
+        /* Se quitó padding general */
+      }
+
+      /* --- Barra de Navegación Admin (Ancho Completo) --- */
+      .admin-navbar {
+        background-color: var(--admin-header);
+        color: white;
+        padding: 0.8em 1.5em;
+        font-size: 0.9em;
+        font-weight: 500;
+      }
+      .admin-navbar a {
+        color: white;
+        text-decoration: none;
+        margin: 0 0.5em;
+      }
+
+      /* --- Contenedor Principal (Centrado con Max-Width) --- */
+      .moderation-main-content {
+        background-color: var(--admin-panel-bg);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        max-width: 960px; /* Ajusta según necesidad */
+        margin: 2em auto; /* Centrar el contenido */
+        padding: 1.5em 2em;
+        overflow: hidden;
+      }
+
+      .moderation-title {
+        font-size: 1.5em;
+        margin: 0 0 1.5em 0;
+        padding-bottom: 0.5em;
+        border-bottom: 1px solid var(--admin-border);
+      }
+
+      /* --- Tarjeta de Reseña --- */
+      .review-card {
+        border: 1px solid var(--admin-border);
+        border-radius: 8px;
+        padding: 1em;
+        margin-bottom: 1.5em;
+        background-color: #fdfdfd;
+        /* Podríamos añadir un estilo para reseñas marcadas, ej: border-left: 4px solid orange; */
+      }
+      .review-card p {
+        margin: 0 0 0.8em 0;
+        line-height: 1.5;
+      }
+      .review-card strong {
+        color: #555;
+      }
+      .star-rating .filled {
+        color: var(--star-color);
+      }
+      .star-rating .empty {
+        color: #ccc;
+      }
+      .review-actions {
+        display: flex;
+        gap: 1em;
+        justify-content: flex-end;
+        margin-top: 1em;
+        padding-top: 1em;
+        border-top: 1px solid #f0f0f0;
+      }
+      .action-btn {
+        border: none;
+        color: white;
+        padding: 0.6em 1.5em;
+        border-radius: 5px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+      .action-btn:hover {
+        opacity: 0.85;
+      }
+      .btn-approve {
+        background-color: var(--admin-action-approve);
+      }
+      .btn-reject {
+        background-color: var(--admin-action-reject);
+      }
+
+      /* --- Paginación --- */
+      .pagination-controls {
+        text-align: center;
+        padding: 1.5em 0 0.5em 0; /* Más espacio arriba */
+        border-top: 1px solid var(--admin-border);
+        margin-top: 1.5em; /* Separación de la última tarjeta */
+      }
+      .pagination-controls button,
+      .pagination-controls span {
+        display: inline-block;
+        margin: 0 0.3em;
+        padding: 0.5em 0.8em;
+        border: 1px solid var(--admin-border);
+        background-color: white;
+        color: var(--admin-text);
+        cursor: pointer;
+        border-radius: 4px;
+        min-width: 30px; /* Ancho mínimo */
+      }
+      .pagination-controls button:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+      .pagination-controls span.current-page {
+        background-color: var(--admin-header);
+        color: white;
+        border-color: var(--admin-header);
+        font-weight: 700;
+      }
+      .pagination-controls .dots {
+        border: none;
+        background: none;
+        padding: 0.5em 0.2em;
+        cursor: default;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="admin-navbar">
+      <a href="B13_B14-Reporte_de_venta.html">Reporte</a> |
+      <a href="B15-Moderacion_de_reseñas.html">Reseñas</a> |
+      <a href="B16-Carga_de_Producto.html">Carga Producto</a> |
+      <a href="B17-Gestion_de_Productos.html">Gestionar Produccto</a>
+    </nav>
+
+    <div class="moderation-main-content">
+      <h2 class="moderation-title">Moderación de Reseñas Pendientes</h2>
+
+      <div id="reviews-list"></div>
+
+      <div id="pagination-controls" class="pagination-controls"></div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        let pendingReviews = [
+          {
+            id: 101,
+            product: "Plato C",
+            author: "Santiago Monsálvez",
+            rating: 4,
+            comment: "No estuvo mal, pero la porción era pequeña.",
+            flagged: false,
+          },
+          {
+            id: 102,
+            product: "Plato E",
+            author: "Martín Cárdenas",
+            rating: 1,
+            comment: "Visita mi web de descuentos: spam.com",
+            flagged: true,
+          },
+          {
+            id: 103,
+            product: "Plato A",
+            author: "Ana Fuentes",
+            rating: 5,
+            comment: "¡Exquisito! Totalmente recomendado.",
+            flagged: false,
+          },
+          {
+            id: 104,
+            product: "Plato B",
+            author: "Carlos Soto",
+            rating: 2,
+            comment: "El servicio fue muy lento.",
+            flagged: false,
+          },
+          {
+            id: 105,
+            product: "Plato D",
+            author: "Laura Pérez",
+            rating: 3,
+            comment: "Estuvo bien, normal.",
+            flagged: false,
+          },
+          {
+            id: 106,
+            product: "Plato F",
+            author: "Pedro Gómez",
+            rating: 5,
+            comment: "Increíble sabor, volveré pronto.",
+            flagged: false,
+          },
+          {
+            id: 107,
+            product: "Plato G",
+            author: "Isabel Castro",
+            rating: 4,
+            comment: "Muy rico, aunque un poco picante para mi gusto.",
+            flagged: false,
+          },
+          {
+            id: 108,
+            product: "Plato H",
+            author: "Javier Muñoz",
+            rating: 1,
+            comment: "No me gustó nada.",
+            flagged: false,
+          },
+          {
+            id: 109,
+            product: "Plato C",
+            author: "Elena Silva",
+            rating: 5,
+            comment: "Perfecto.",
+            flagged: false,
+          },
+          {
+            id: 110,
+            product: "Plato E",
+            author: "Ricardo Díaz",
+            rating: 4,
+            comment: "Buena relación calidad-precio.",
+            flagged: false,
+          },
+          {
+            id: 111,
+            product: "Plato A",
+            author: "Sofía Vargas",
+            rating: 3,
+            comment: "Esperaba más.",
+            flagged: false,
+          },
+          {
+            id: 112,
+            product: "Plato B",
+            author: "Andrés Rojas",
+            rating: 5,
+            comment: "¡Delicioso!",
+            flagged: false,
+          },
+          {
+            id: 113,
+            product: "Plato D",
+            author: "Camila Flores",
+            rating: 4,
+            comment: "Recomendable.",
+            flagged: false,
+          },
+          {
+            id: 114,
+            product: "Plato F",
+            author: "Matías Herrera",
+            rating: 2,
+            comment: "No cumplió mis expectativas.",
+            flagged: false,
+          },
+          {
+            id: 115,
+            product: "Plato G",
+            author: "Valentina Reyes",
+            rating: 5,
+            comment: "El mejor plato que he probado.",
+            flagged: false,
+          },
+          {
+            id: 116,
+            product: "Plato H",
+            author: "Benjamín Torres",
+            rating: 1,
+            comment: "Terrible.",
+            flagged: false,
+          },
+          {
+            id: 117,
+            product: "Plato C",
+            author: "Antonia Morales",
+            rating: 4,
+            comment: "Muy sabroso.",
+            flagged: false,
+          },
+        ];
+
+        const itemsPerPage = 8;
+        let currentPage = 1;
+
+        const reviewsListContainer = document.getElementById("reviews-list");
+        const paginationControlsContainer = document.getElementById(
+          "pagination-controls"
+        );
+
+        const createStarRating = (rating) => {
+          let stars = "";
+          for (let i = 1; i <= 5; i++) {
+            stars += `<span class="${
+              i <= rating ? "filled" : "empty"
+            }">★</span>`;
+          }
+          return `<span class="star-rating">${stars}</span>`;
+        };
+
+        const renderReviews = () => {
+          reviewsListContainer.innerHTML = "";
+          const totalReviews = pendingReviews.length;
+
+          if (totalReviews === 0) {
+            reviewsListContainer.innerHTML =
+              '<p style="text-align:center; color:#777;">¡No hay reseñas pendientes!</p>';
+            renderPagination(0);
+            return;
+          }
+
+          const startIndex = (currentPage - 1) * itemsPerPage;
+          const endIndex = startIndex + itemsPerPage;
+          const reviewsToShow = pendingReviews.slice(startIndex, endIndex);
+
+          reviewsToShow.forEach((review) => {
+            const card = document.createElement("div");
+            card.className = "review-card";
+            if (review.flagged) {
+              card.style.borderLeft = "4px solid orange";
+              card.title = "Esta reseña podría ser spam o inapropiada";
+            }
+            card.innerHTML = `
+                        <p><strong>Producto:</strong> ${review.product}</p>
+                        <p><strong>Autor:</strong> ${review.author}</p>
+                        <p><strong>Clasificación:</strong> ${createStarRating(
+                          review.rating
+                        )}</p>
+                        <p><strong>Comentario:</strong> ${review.comment}</p>
+                        <div class="review-actions">
+                            <button class="action-btn btn-approve" data-id="${
+                              review.id
+                            }">Aprobar</button>
+                            <button class="action-btn btn-reject" data-id="${
+                              review.id
+                            }">Rechazar</button>
+                        </div>
+                    `;
+            reviewsListContainer.appendChild(card);
+          });
+
+          renderPagination(totalReviews);
+        };
+
+        const renderPagination = (totalItems) => {
+          paginationControlsContainer.innerHTML = "";
+          const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+          if (totalPages <= 1) return;
+
+          const prevButton = document.createElement("button");
+          prevButton.innerHTML = "&lt;";
+          prevButton.disabled = currentPage === 1;
+          prevButton.addEventListener("click", () =>
+            changePage(currentPage - 1)
+          );
+          paginationControlsContainer.appendChild(prevButton);
+
+          const maxPagesToShow = 5;
+          let startPage = Math.max(
+            1,
+            currentPage - Math.floor(maxPagesToShow / 2)
+          );
+          let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+          if (endPage - startPage + 1 < maxPagesToShow) {
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+          }
+
+          if (startPage > 1) {
+            const firstPageButton = document.createElement("button");
+            firstPageButton.textContent = "1";
+            firstPageButton.addEventListener("click", () => changePage(1));
+            paginationControlsContainer.appendChild(firstPageButton);
+            if (startPage > 2) {
+              const dots = document.createElement("span");
+              dots.className = "dots";
+              dots.textContent = "...";
+              paginationControlsContainer.appendChild(dots);
+            }
+          }
+
+          for (let i = startPage; i <= endPage; i++) {
+            const pageButton = document.createElement(
+              i === currentPage ? "span" : "button"
+            );
+            pageButton.textContent = i;
+            if (i === currentPage) {
+              pageButton.className = "current-page";
+            } else {
+              pageButton.addEventListener("click", () => changePage(i));
+            }
+            paginationControlsContainer.appendChild(pageButton);
+          }
+
+          if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+              const dots = document.createElement("span");
+              dots.className = "dots";
+              dots.textContent = "...";
+              paginationControlsContainer.appendChild(dots);
+            }
+            const lastPageButton = document.createElement("button");
+            lastPageButton.textContent = totalPages;
+            lastPageButton.addEventListener("click", () =>
+              changePage(totalPages)
+            );
+            paginationControlsContainer.appendChild(lastPageButton);
+          }
+
+          const nextButton = document.createElement("button");
+          nextButton.innerHTML = "&gt;";
+          nextButton.disabled = currentPage === totalPages;
+          nextButton.addEventListener("click", () =>
+            changePage(currentPage + 1)
+          );
+          paginationControlsContainer.appendChild(nextButton);
+        };
+
+        const changePage = (newPage) => {
+          currentPage = newPage;
+          renderReviews();
+        };
+
+        // MANEJO DE EVENTOS (Aprobar/Rechazar)
+        reviewsListContainer.addEventListener("click", (event) => {
+          const target = event.target;
+          if (
+            target.tagName !== "BUTTON" ||
+            !target.dataset.id ||
+            !(
+              target.classList.contains("btn-approve") ||
+              target.classList.contains("btn-reject")
+            )
+          ) {
+            return;
+          }
+          const reviewId = parseInt(target.dataset.id);
+          const totalBefore = pendingReviews.length;
+
+          pendingReviews = pendingReviews.filter(
+            (review) => review.id !== reviewId
+          );
+          const newTotalPages = Math.ceil(pendingReviews.length / itemsPerPage);
+          if (currentPage > newTotalPages && currentPage > 1) {
+            currentPage = newTotalPages;
+          }
+
+          renderReviews();
+        });
+
+        renderReviews();
+      });
+    </script>
+  </body>
+</html>

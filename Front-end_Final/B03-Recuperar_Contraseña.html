@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recuperar Contraseña - Malasa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --color-primario: #ff9933;
+        --color-secundario: #8b4513;
+        --color-fondo: #fff8e1;
+        --color-texto: #4a2e2a;
+        --color-fondo-pagina: #f0f0f0;
+        --color-accion: #007bff;
+        --fuente-titulos: "Lora", serif;
+        --fuente-cuerpo: "Open Sans", sans-serif;
+      }
+
+      body {
+        font-family: var(--fuente-cuerpo);
+        background-color: var(--color-fondo-pagina);
+        color: var(--color-texto);
+        margin: 0;
+        padding: 2em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 500px;
+      }
+      .card {
+        background-color: var(--color-fondo);
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .card-body {
+        padding: 2.5em;
+        text-align: center;
+      }
+      .card-title {
+        font-family: var(--fuente-titulos);
+        color: var(--color-secundario);
+        font-weight: 600;
+        font-size: 2em;
+        margin-bottom: 0.5em;
+      }
+      .card-subtitle {
+        color: #6c757d;
+        margin-bottom: 1.5em;
+      }
+
+      .form-floating {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+      .form-control {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+        box-sizing: border-box;
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: var(--color-primario);
+      }
+      .form-floating label {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        color: #aaa;
+        pointer-events: none;
+        transition: all 0.2s ease-in-out;
+      }
+      .form-control:focus + label,
+      .form-control:not(:placeholder-shown) + label {
+        top: -0.75rem;
+        left: 0.75rem;
+        font-size: 0.8rem;
+        background-color: var(--color-fondo);
+        padding: 0 0.25rem;
+        color: var(--color-secundario);
+      }
+
+      .btn-primary {
+        background-color: var(--color-accion);
+        border: none;
+        border-radius: 25px;
+        padding: 0.8em;
+        font-size: 1.1em;
+        font-weight: 600;
+        color: white;
+        width: 100%;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .btn-primary:hover {
+        background-color: #0056b3;
+      }
+
+      .bottom-link {
+        margin-top: 2em;
+        font-size: 0.9em;
+      }
+      .bottom-link a {
+        color: var(--color-secundario);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .bottom-link a:hover {
+        text-decoration: underline;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <div id="email-request-view">
+            <h3 class="card-title">Recuperar Contraseña</h3>
+            <p class="card-subtitle">
+              Ingresa tu correo y te enviaremos un enlace para restablecerla.
+            </p>
+            <form id="email-request-form">
+              <div class="form-floating">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="emailRecovery"
+                  required
+                />
+                <label for="emailRecovery">Correo Electrónico</label>
+              </div>
+              <button class="btn-primary" type="submit">Enviar Enlace</button>
+            </form>
+            <div class="bottom-link">
+              <a href="#">Volver a Inicio de Sesión</a>
+            </div>
+          </div>
+
+          <div id="password-reset-view" class="hidden">
+            <h3 class="card-title">Crear nueva contraseña</h3>
+            <p class="card-subtitle">
+              Define una nueva contraseña para tu cuenta.
+            </p>
+            <form id="password-reset-form">
+              <div class="form-floating">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="new-password"
+                  required
+                />
+                <label for="new-password">Contraseña nueva</label>
+              </div>
+              <div class="form-floating">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirm-password"
+                  required
+                />
+                <label for="confirm-password">Confirmar Contraseña</label>
+              </div>
+              <button class="btn-primary" type="submit">
+                Actualizar Contraseña
+              </button>
+            </form>
+          </div>
+
+          <div id="success-view" class="hidden">
+            <h3 class="card-title">Contraseña actualizada</h3>
+            <p class="card-subtitle">
+              Tu contraseña ha sido actualizada correctamente.
+            </p>
+            <button id="go-to-login-btn" class="btn-primary">
+              Ir a inicio de sesion
+            </button>
+          </div>
+
+          <div id="expired-link-view" class="hidden">
+            <h3 class="card-title">Enlace caducado</h3>
+            <p class="card-subtitle">
+              Tu enlace a caducado, solicite uno nuevo.
+            </p>
+            <button id="expired-ok-btn" class="btn-primary">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const emailRequestView = document.getElementById("email-request-view");
+        const passwordResetView = document.getElementById(
+          "password-reset-view"
+        );
+        const successView = document.getElementById("success-view");
+
+        const emailRequestForm = document.getElementById("email-request-form");
+        const passwordResetForm = document.getElementById(
+          "password-reset-form"
+        );
+        const goToLoginBtn = document.getElementById("go-to-login-btn");
+
+        function showView(viewToShow) {
+          emailRequestView.classList.add("hidden");
+          passwordResetView.classList.add("hidden");
+          successView.classList.add("hidden");
+          viewToShow.classList.remove("hidden");
+        }
+
+        emailRequestForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          console.log(
+            "Enlace de recuperación enviado a:",
+            document.getElementById("emailRecovery").value
+          );
+          showView(passwordResetView);
+        });
+
+        passwordResetForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          console.log("Contraseña actualizada.");
+          showView(successView);
+        });
+
+        goToLoginBtn.addEventListener("click", () => {
+          console.log("Volviendo al inicio del flujo.");
+          showView(emailRequestView);
+        });
+      });
+    </script>
+  </body>
+</html>

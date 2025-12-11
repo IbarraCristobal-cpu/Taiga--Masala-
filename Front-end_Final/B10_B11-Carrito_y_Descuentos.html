@@ -6,17 +6,93 @@
     <title>Carrito de Compras - Malasa</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
     <style>
+      /* ==================== VARIABLES ==================== */
       :root {
-        align-items: center;
+        --color-primario: #ff9933;
+        --color-secundario: #8b4513;
+        --color-accion-primaria: #ff9933;
+        --color-accion-secundaria: #6a350f;
+        --color-texto: #333;
+        --color-texto-secundario: #666;
+        --color-surface: #f5f5f5;
+        --color-fondo: #fafafa;
+        --color-descuento: #4caf50;
+      }
+
+      /* ==================== LAYOUT ==================== */
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--color-fondo);
+      }
+
+      .cart-container {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 3rem auto;
+        padding: 0 1rem;
+      }
+
+      .cart-items-column {
+        min-height: 400px;
+      }
+
+      .cart-title {
+        font-family: "Lora", serif;
+        font-size: 2.5rem;
+        color: var(--color-texto);
+        margin: 0 0 0.5rem 0;
+      }
+
+      .cart-subtitle {
+        margin: 0 0 1.5rem 0;
+        color: var(--color-texto-secundario);
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 1rem;
+        font-size: 0.95rem;
+      }
+
+      /* ==================== CARRITO VACÍO ==================== */
+      #cart-empty-message {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: white;
+        border-radius: 8px;
+        color: var(--color-texto-secundario);
+      }
+
+      #cart-empty-message h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      #cart-empty-message a {
+        color: var(--color-accion-primaria);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .navbar {
+        background-color: var(--color-surface);
+        padding: 0.5rem 1rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        position: sticky;
+        top: 0;
+        z-index: 100;
       }
       .navbar-container {
+        width: 100%;
+        max-width: 1140px;
+        margin: auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0.5rem 1rem;
       }
       .navbar-brand {
         font-family: var(--fuente-titulos);
@@ -28,185 +104,316 @@
         align-items: center;
       }
       .navbar-brand img {
-        margin-right: 0.5rem;
-        border-radius: 50%;
         width: 40px;
         height: 40px;
         object-fit: cover;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+      }
+      .navbar {
+        background-color: var(--color-surface);
+        padding: 0.5rem 1rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .navbar-container {
+        width: 100%;
+        max-width: 1140px;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .navbar-brand {
+        font-family: var(--fuente-titulos);
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: var(--color-texto);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+      .navbar-brand img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+      }
+      .navbar-nav {
+        list-style: none;
+        display: flex;
+        gap: 1.5rem;
+        margin: 0;
+      }
+      .nav-link {
+        color: var(--color-texto);
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .nav-link.active,
+      .nav-link:hover {
+        color: var(--color-primario);
+      }
+
+      /* Estilos específicos para botones de estado (ocultos por defecto) */
+      #nav-btn-admin,
+      #nav-btn-logout,
+      #nav-btn-profile {
+        display: none; /* Se activan vía JS */
       }
       #nav-btn-admin {
         color: #d32f2f;
       }
-      .cart-page-container {
-        font-size: 1.8em;
-        margin-top: 0;
-        margin-bottom: 0.5em;
-      }
-      .cart-subtitle {
-        margin-top: 0;
-        color: #757575;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 1em;
-        margin-bottom: 1.5em;
+      /* ==================== ITEMS DEL CARRITO ==================== */
+      .cart-items-list {
+        margin-bottom: 1.5rem;
       }
 
-      .cart-items-list {
-        margin-bottom: 1.5em;
-      }
       .cart-item {
         display: flex;
-        align-items: center;
-        gap: 1.5em;
-        padding: 1.5em 0.5em;
-        border-bottom: 1px solid #eee;
+        align-items: flex-start;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        background: white;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border-left: 4px solid var(--color-primario);
+        transition: box-shadow 0.3s;
       }
+
+      .cart-item:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
       .cart-item img {
-        width: 80px;
-        height: 80px;
-        border-radius: 5px;
-        background-color: #ccc;
-        flex-shrink: 0;
+        width: 100px;
+        height: 100px;
+        border-radius: 8px;
         object-fit: cover;
+        background-color: #ddd;
+        flex-shrink: 0;
       }
+
       .item-details {
         flex-grow: 1;
       }
+
       .item-details p {
-        margin: 0;
+        margin: 0.25rem 0;
       }
-      .item-details .item-name {
-        font-weight: 600;
-        font-size: 1.1em;
+
+      .item-name {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--color-texto);
+        margin-bottom: 0.5rem;
       }
-      .item-details .item-price-info {
-        font-size: 0.95em;
-        color: #757575;
+
+      .item-price-info {
+        font-size: 0.9rem;
+        color: var(--color-texto-secundario);
       }
+
+      .item-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
       .item-quantity {
         display: flex;
         align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background: white;
       }
+
       .quantity-btn {
-        background: #fff;
-        border: 1px solid #ccc;
-        width: 28px;
-        height: 28px;
+        background: white;
+        border: none;
+        width: 32px;
+        height: 32px;
         cursor: pointer;
-        font-size: 1.2em;
-        line-height: 1;
-        border-radius: 50%;
+        font-size: 1.1rem;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
+
+      .quantity-btn:hover {
+        background-color: var(--color-surface);
+      }
+
       .quantity-input {
-        width: 30px;
+        width: 40px;
         text-align: center;
         border: none;
         background: transparent;
-        font-size: 1.1em;
+        font-size: 1rem;
         font-weight: 600;
+        color: var(--color-texto);
       }
+
       .item-remove button {
-        background: transparent;
+        background: none;
         border: none;
-        font-size: 1.5em;
+        font-size: 1.3rem;
         cursor: pointer;
-        color: #d9534f;
+        color: #d32f2f;
+        transition: transform 0.2s;
       }
 
+      .item-remove button:hover {
+        transform: scale(1.2);
+      }
+
+      /* ==================== RESUMEN LATERAL ==================== */
       .cart-summary-column {
-        flex: 1;
-        min-width: 280px;
         position: sticky;
-        top: 2em;
-        align-self: flex-start;
-      }
-      .summary-box {
-        background-color: var(--color-surface);
-        padding: 1.5em;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        top: 2rem;
+        height: fit-content;
       }
 
-      /* Sección de Descuento */
+      .summary-box {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* --- Sección de Descuento --- */
       .discount-section {
-        padding: 1em;
-        background-color: var(--color-fondo);
+        padding: 1rem;
+        background-color: var(--color-surface);
         border-radius: 5px;
         border: 1px solid #ddd;
-        margin-bottom: 1.5em;
-      }
-      .discount-section label {
-        display: block;
-        margin-bottom: 0.5em;
-        font-weight: 600;
-      }
-      .discount-input-group {
-        display: flex;
-        gap: 0.5em;
-      }
-      .discount-input-group input {
-        flex-grow: 1;
-        border: 1px solid #ccc;
-        padding: 0.5em;
-        border-radius: 5px;
-      }
-      .discount-input-group button {
-        border: none;
-        background-color: var(--color-secundario);
-        color: white;
-        padding: 0.5em 1em;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: 600;
+        margin-bottom: 1.5rem;
       }
 
-      .cart-summary {
-        margin-bottom: 1.5em;
+      .discount-section label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--color-texto);
       }
+
+      .discount-input-group {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .discount-input-group input {
+        flex: 1;
+        padding: 0.6rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .discount-input-group button {
+        padding: 0.6rem 1rem;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--color-accion-primaria);
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.3s;
+      }
+
+      .discount-input-group button:hover {
+        background-color: var(--color-accion-secundaria);
+      }
+
+      /* --- Resumen de Costo --- */
+      .cart-summary {
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 1rem;
+      }
+
       .summary-line {
         display: flex;
         justify-content: space-between;
-        padding: 0.3em 0;
+        padding: 0.6rem 0;
+        font-size: 0.95rem;
+        color: var(--color-texto);
       }
+
+      .summary-line span:first-child {
+        font-weight: 500;
+      }
+
+      .summary-line span:last-child {
+        text-align: right;
+        font-weight: 600;
+      }
+
+      .summary-line.total {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--color-accion-primaria);
+        border-top: 2px solid var(--color-primario);
+        padding-top: 0.8rem;
+        padding-bottom: 0;
+      }
+
       #discount-line {
         color: var(--color-descuento);
         font-weight: 600;
       }
-      .summary-line.total {
-        font-size: 1.2em;
-        font-weight: 700;
-        border-top: 2px solid var(--color-secundario);
-        margin-top: 0.5em;
-        padding-top: 0.5em;
-      }
+
+      /* --- Botones de Acción --- */
       .cart-actions {
         display: flex;
         flex-direction: column;
-        gap: 1em;
+        gap: 0.8rem;
       }
+
       .cart-btn {
-        padding: 0.8em 1.5em;
+        padding: 0.9rem 1.2rem;
         border: none;
         border-radius: 8px;
-        font-size: 1em;
+        font-size: 0.95rem;
         font-weight: 600;
         cursor: pointer;
-        transition: transform 0.2s;
-        width: 100%;
-        text-align: center;
+        transition: all 0.3s;
         text-decoration: none;
-        display: inline-block;
-        box-sizing: border-box;
+        display: block;
+        text-align: center;
+        font-family: "Poppins", sans-serif;
       }
+
       .btn-primary {
         background-color: var(--color-accion-primaria);
         color: white;
       }
-      .btn-secondary {
-        background-color: var(--color-surface);
-        color: var(--color-accion-secundaria);
-        border: 1px solid var(--color-accion-secundaria);
+
+      .btn-primary:hover {
+        background-color: var(--color-accion-secundaria);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 153, 51, 0.3);
       }
 
+      .btn-secondary {
+        background-color: white;
+        color: var(--color-accion-primaria);
+        border: 2px solid var(--color-accion-primaria);
+      }
+
+      .btn-secondary:hover {
+        background-color: var(--color-surface);
+      }
+
+      /* ==================== MODAL ==================== */
       .modal-overlay {
         position: fixed;
         top: 0;
@@ -214,126 +421,84 @@
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.6);
-        display: flex;
+        display: none;
         justify-content: center;
         align-items: center;
         z-index: 1000;
       }
+
+      .modal-overlay.show {
+        display: flex;
+      }
+
       .modal-content {
         background: white;
-        padding: 2em;
+        padding: 2rem;
         border-radius: 8px;
         text-align: center;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      }
-      .modal-content h3 {
-        margin-top: 0;
-        font-family: var(--fuente-titulos);
-      }
-      .modal-content button {
-        margin-top: 1em;
-        padding: 0.6em 2em;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        background: #eee;
-        cursor: pointer;
+        max-width: 400px;
       }
 
-      /* Mensaje de Carrito Vacío */
-      #cart-empty-message {
-        text-align: center;
-        padding: 2em;
+      .modal-content h3 {
+        margin: 0 0 1rem 0;
+        font-family: "Lora", serif;
+        color: var(--color-secundario);
+        font-size: 1.3rem;
+      }
+
+      .modal-content p {
         color: var(--color-texto-secundario);
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-content button {
+        padding: 0.7rem 2rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background: var(--color-accion-primaria);
+        color: white;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s;
+      }
+
+      .modal-content button:hover {
+        background-color: var(--color-accion-secundaria);
+      }
+
+      /* ==================== RESPONSIVE ==================== */
+      @media (max-width: 768px) {
+        .cart-container {
+          grid-template-columns: 1fr;
+        }
+
+        .cart-summary-column {
+          position: static;
+        }
+
+        .cart-item {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .item-controls {
+          justify-content: space-between;
+          width: 100%;
+        }
+
+        .discount-input-group {
+          flex-direction: column;
+        }
+
+        .discount-input-group button {
+          width: 100%;
+        }
       }
     </style>
   </head>
-  <!-- Estilos del modal copiados desde B07-Home -->
-  <style>
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-    .modal-overlay.hidden {
-      opacity: 0;
-      visibility: hidden;
-    }
-    .modal-card {
-      background-color: #fff8e1;
-      border-radius: 10px;
-      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-      width: 100%;
-      max-width: 500px;
-      max-height: 90vh;
-      overflow-y: auto;
-      position: relative;
-      padding: 2.5em;
-      text-align: center;
-    }
-    .close-modal-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 2rem;
-      color: #6c757d;
-      background: none;
-      border: none;
-      cursor: pointer;
-      line-height: 1;
-    }
-    .modal-card .card-title {
-      font-family: "Lora", serif;
-      color: #8b4513;
-      font-weight: 600;
-      font-size: 2em;
-      margin-bottom: 1.5em;
-    }
-    .modal-card .form-floating {
-      position: relative;
-      margin-bottom: 1.5rem;
-      text-align: left;
-    }
-    .modal-card .form-control {
-      width: 100%;
-      padding: 1rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: #fff;
-      box-sizing: border-box;
-    }
-    .modal-card .btn-primary {
-      background-color: #8b4513;
-      border: none;
-      border-radius: 25px;
-      padding: 0.8em;
-      font-size: 1.1em;
-      font-weight: 600;
-      color: white;
-      width: 100%;
-      cursor: pointer;
-      margin-bottom: 1.5em;
-    }
-    .modal-card .btn-primary:hover {
-      background-color: #6a350f;
-    }
-    .modal-card .register-link a {
-      color: #8b4513;
-      font-weight: 600;
-      text-decoration: none;
-    }
-  </style>
   <body>
+    <!-- ==================== NAVEGACIÓN ==================== -->
     <nav class="navbar">
       <div class="navbar-container">
         <a class="navbar-brand" href="#">
@@ -348,21 +513,16 @@
               >Contacto</a
             >
           </li>
-
-          <!-- Botones Dinámicos (Controlados por menu_logic.js) -->
           <li>
             <a class="nav-link" id="nav-btn-login" href="#">Iniciar Sesión</a>
           </li>
-
-          <!-- Estos están ocultos por defecto (display: none) -->
           <li>
             <a
               class="nav-link"
               id="nav-btn-profile"
               href="B08_B09-Perfil_de_usuario.html"
               style="display: none"
-            >
-              Mi Perfil</a
+              >Mi Perfil</a
             >
           </li>
           <li>
@@ -380,15 +540,16 @@
               id="nav-btn-logout"
               href="B07-Home.html"
               style="display: none"
-            >
-              Salir</a
+              >Salir</a
             >
           </li>
         </ul>
       </div>
     </nav>
 
-    <div class="cart-page-container">
+    <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
+    <div class="cart-container">
+      <!-- COLUMNA IZQUIERDA: Items del carrito -->
       <div class="cart-items-column">
         <h2 class="cart-title">Carrito</h2>
         <p class="cart-subtitle">Detalle de la compra</p>
@@ -402,12 +563,12 @@
         </div>
       </div>
 
+      <!-- COLUMNA DERECHA: Resumen y acciones -->
       <div class="cart-summary-column">
         <div id="summary-and-actions" class="summary-box">
+          <!-- Sección de Descuentos -->
           <div class="discount-section">
-            <label for="discount-code-input"
-              >Ingrese su código de descuento</label
-            >
+            <label for="discount-code-input">Código de descuento</label>
             <div class="discount-input-group">
               <input
                 type="text"
@@ -417,9 +578,11 @@
               <button id="apply-discount-btn">Aplicar</button>
             </div>
           </div>
+
+          <!-- Resumen de Costos -->
           <div class="cart-summary">
             <div class="summary-line">
-              <span>Platos:</span>
+              <span>Subtotal:</span>
               <span id="summary-subtotal">$ 0</span>
             </div>
             <div class="summary-line" id="discount-line" style="display: none">
@@ -427,7 +590,7 @@
               <span id="summary-discount">$ 0</span>
             </div>
             <div class="summary-line">
-              <span>Envió:</span>
+              <span>Envío:</span>
               <span id="summary-shipping">$ 0</span>
             </div>
             <div class="summary-line total">
@@ -435,188 +598,30 @@
               <span id="summary-total">$ 0</span>
             </div>
           </div>
+
+          <!-- Botones de Acción -->
           <div class="cart-actions">
             <a href="B12-Metodo_de_pago.html" class="cart-btn btn-primary"
               >Ir a Pagar</a
             >
             <a href="B04_B05-Catalogo.html" class="cart-btn btn-secondary"
-              >Volver a la carta</a
+              >Continuar Comprando</a
             >
           </div>
         </div>
       </div>
     </div>
 
-    <div id="invalid-code-modal" class="modal-overlay" style="display: none">
+    <!-- ==================== MODAL DE ERROR ==================== -->
+    <div id="invalid-code-modal" class="modal-overlay">
       <div class="modal-content">
-        <h3>Código inválido</h3>
-        <p>Código de descuento expirado o inválido</p>
-        <button id="modal-ok-btn">OK</button>
+        <h3>❌ Código inválido</h3>
+        <p>El código de descuento está expirado o no es válido.</p>
+        <button id="modal-ok-btn">Entendido</button>
       </div>
     </div>
-    <script src="api.js"></script>
-    <script src="menu_logic.js"></script>
-    <script src="login_handler.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        let cartItems = [
-          {
-            id: 1,
-            name: "Plato A",
-            price: 8990,
-            quantity: 1,
-            image: "images/Entradas/4.jpg",
-          },
-          {
-            id: 2,
-            name: "Plato B",
-            price: 6980,
-            quantity: 2,
-            image: "images/Entradas/2.jpg",
-          },
-          {
-            id: 3,
-            name: "Chana Pindi Batura",
-            price: 14400,
-            quantity: 1,
-            image: "images/Vegetarianos/1.jpg",
-          },
-          {
-            id: 4,
-            name: "Murgh Mitha Suthra",
-            price: 12500,
-            quantity: 1,
-            image: "images/Pollo/3.jpg",
-          },
-        ];
-        const discountCodes = { VERANO2025: { type: "percentage", value: 10 } };
-        let appliedDiscountCode = null;
 
-        const cartListEl = document.getElementById("cart-items-list");
-        const subtotalEl = document.getElementById("summary-subtotal");
-        const shippingEl = document.getElementById("summary-shipping");
-        const totalEl = document.getElementById("summary-total");
-        const discountLineEl = document.getElementById("discount-line");
-        const discountAmountEl = document.getElementById("summary-discount");
-        const emptyMessageEl = document.getElementById("cart-empty-message");
-        const summaryActionsEl = document.getElementById("summary-and-actions");
-        const discountInput = document.getElementById("discount-code-input");
-        const applyDiscountBtn = document.getElementById("apply-discount-btn");
-        const invalidCodeModal = document.getElementById("invalid-code-modal");
-        const modalOkBtn = document.getElementById("modal-ok-btn");
-
-        const formatCurrency = (value) =>
-          new Intl.NumberFormat("es-CL", {
-            style: "currency",
-            currency: "CLP",
-          }).format(value);
-
-        const renderCart = () => {
-          cartListEl.innerHTML = "";
-
-          if (cartItems.length === 0) {
-            emptyMessageEl.style.display = "block";
-            summaryActionsEl.style.display = "none";
-            cartListEl.style.display = "none";
-            return;
-          } else {
-            emptyMessageEl.style.display = "none";
-            summaryActionsEl.style.display = "block";
-            cartListEl.style.display = "block";
-          }
-
-          let subtotal = 0;
-          cartItems.forEach((item) => {
-            const itemTotal = item.price * item.quantity;
-            subtotal += itemTotal;
-            const itemEl = document.createElement("div");
-            itemEl.className = "cart-item";
-            itemEl.innerHTML = `<img src="${
-              item.image ||
-              "https://via.placeholder.com/60x60.png/ccc/ffffff?text=IMG"
-            }" alt="${item.name}">
-                        <div class="item-details">
-                            <p class="item-name">${item.name}</p>
-                            <p class="item-price-info">(${
-                              item.quantity
-                            } x ${formatCurrency(item.price)}) ........ 
-                              ${formatCurrency(itemTotal)}</p>
-                        </div>
-                        <div class="item-quantity"> <button class="quantity-btn" data-id="${
-                          item.id
-                        }" data-action="decrease">-</button> <input type="text" class="quantity-input" value="${
-              item.quantity
-            }" readonly> <button class="quantity-btn" data-id="${
-              item.id
-            }" data-action="increase">+</button> </div>
-                        <div class="item-remove"> <button data-id="${
-                          item.id
-                        }" data-action="remove">🗑️</button> </div>
-                    `;
-            cartListEl.appendChild(itemEl);
-          });
-
-          // cálculo de descuento
-          let discountAmount = 0;
-          if (appliedDiscountCode && discountCodes[appliedDiscountCode]) {
-            const code = discountCodes[appliedDiscountCode];
-            if (code.type === "percentage")
-              discountAmount = subtotal * (code.value / 100);
-            discountAmountEl.textContent = `- ${formatCurrency(
-              discountAmount
-            )}`;
-            discountLineEl.style.display = "flex";
-          } else {
-            discountLineEl.style.display = "none";
-          }
-
-          const shipping = 0;
-          const total = subtotal - discountAmount + shipping;
-          subtotalEl.textContent = formatCurrency(subtotal);
-          shippingEl.textContent = formatCurrency(shipping);
-          totalEl.textContent = formatCurrency(total);
-        };
-
-        cartListEl.addEventListener("click", (event) => {
-          const target = event.target;
-          if (target.tagName !== "BUTTON" || !target.dataset.id) return;
-          const itemId = parseInt(target.dataset.id);
-          const action = target.dataset.action;
-
-          const itemIndex = cartItems.findIndex((i) => i.id === itemId);
-          if (itemIndex === -1) return;
-
-          if (action === "increase") {
-            cartItems[itemIndex].quantity++;
-          } else if (action === "decrease") {
-            if (cartItems[itemIndex].quantity > 1) {
-              cartItems[itemIndex].quantity--;
-            } else {
-              cartItems.splice(itemIndex, 1);
-            }
-          } else if (action === "remove") {
-            cartItems.splice(itemIndex, 1);
-          }
-          renderCart();
-        });
-        applyDiscountBtn.addEventListener("click", () => {
-          const code = discountInput.value.trim().toUpperCase();
-          if (discountCodes[code]) {
-            appliedDiscountCode = code;
-          } else {
-            appliedDiscountCode = null;
-            invalidCodeModal.style.display = "flex";
-          }
-          renderCart();
-        });
-        modalOkBtn.addEventListener("click", () => {
-          invalidCodeModal.style.display = "none";
-        });
-        renderCart();
-      });
-    </script>
-
-    <!-- Login modal (limpio y único) -->
+    <!-- ==================== MODAL DE LOGIN ==================== -->
     <div
       id="login-modal"
       class="modal-overlay hidden"
@@ -640,16 +645,7 @@
             />
             <label for="passLogin">Contraseña</label>
           </div>
-          <a
-            href="B03-Recuperar_Contraseña.html"
-            class="forgot-password"
-            style="
-              display: block;
-              text-align: right;
-              margin-bottom: 1em;
-              color: #8b4513;
-              text-decoration: none;
-            "
+          <a href="B03-Recuperar_Contraseña.html" class="forgot-password"
             >¿Olvidaste tu contraseña?</a
           >
           <button class="btn-primary" type="submit">Ingresar</button>
@@ -663,37 +659,10 @@
       </div>
     </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const loginModal = document.getElementById("login-modal");
-        const loginNavLink = document.getElementById("nav-btn-login");
-        const closeButtons = loginModal
-          ? loginModal.querySelectorAll(".close-modal-btn")
-          : [];
-        const loginForm = document.getElementById("login-form");
-
-        const openModal = () => {
-          if (loginModal) loginModal.classList.remove("hidden");
-        };
-        const closeModal = () => {
-          if (loginModal) loginModal.classList.add("hidden");
-        };
-
-        if (loginNavLink)
-          loginNavLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            openModal();
-          });
-        closeButtons.forEach((btn) =>
-          btn.addEventListener("click", closeModal)
-        );
-        if (loginModal)
-          loginModal.addEventListener("click", (e) => {
-            if (e.target === loginModal) closeModal();
-          });
-
-        // Login ahora gestionado por `login_handler.js` (handler centralizado)
-      });
-    </script>
+    <!-- ==================== SCRIPTS ==================== -->
+    <script src="api.js"></script>
+    <script src="menu_logic.js"></script>
+    <script src="utils/login_handler.js"></script>
+    <script src="utils/cart.js"></script>
   </body>
 </html>

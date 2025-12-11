@@ -291,6 +291,261 @@ const API = {
       throw err;
     }
   },
+
+  // ============================
+  // PEDIDOS Y CHECKOUT
+  // ============================
+
+  async placeOrder(
+    items,
+    couponCode,
+    deliveryMethod,
+    address,
+    paymentToken,
+    saveCard
+  ) {
+    await this.delay(500);
+    const backend = window.BACKEND_URL || "http://localhost:4000/";
+    const token = localStorage.getItem("authToken");
+
+    if (!token) throw new Error("No autenticado");
+
+    const query = `mutation PlaceOrder($items:[CartItemInput]!, $couponCode:String, $deliveryMethod:String!, $address:String, $paymentToken:String, $saveCard:Boolean){ placeOrder(items:$items, couponCode:$couponCode, deliveryMethod:$deliveryMethod, address:$address, paymentToken:$paymentToken, saveCard:$saveCard){ id total status } }`;
+
+    try {
+      const res = await fetch(backend, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          query,
+          variables: {
+            items: items.map((i) => ({
+              productId: i.productId,
+              quantity: i.quantity,
+            })),
+            couponCode,
+            deliveryMethod,
+            address,
+            paymentToken,
+            saveCard: saveCard || false,
+          },
+        }),
+      });
+      if (!res.ok) throw new Error(`Servidor respondió ${res.status}`);
+      const json = await res.json();
+      if (json.errors)
+        throw new Error(json.errors[0].message || "Error placeOrder");
+      return json.data?.placeOrder || null;
+    } catch (err) {
+      console.error("placeOrder error:", err);
+      throw err;
+    }
+  },
+
+  async saveCard(token, last4, brand) {
+    await this.delay(300);
+    const backend = window.BACKEND_URL || "http://localhost:4000/";
+    const authToken = localStorage.getItem("authToken");
+
+    if (!authToken) throw new Error("No autenticado");
+
+    const query = `mutation SaveCard($token:String!, $last4:String!, $brand:String){ saveCard(token:$token, last4:$last4, brand:$brand){ id savedCards{ id last4 brand } } }`;
+
+    try {
+      const res = await fetch(backend, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          query,
+          variables: { token, last4, brand },
+        }),
+      });
+      if (!res.ok) throw new Error(`Servidor respondió ${res.status}`);
+      const json = await res.json();
+      if (json.errors)
+        throw new Error(json.errors[0].message || "Error saveCard");
+      return json.data?.saveCard?.savedCards || [];
+    } catch (err) {
+      console.error("saveCard error:", err);
+      throw err;
+    }
+  },
+
+  async getMyProfile() {
+    await this.delay(300);
+    const backend = window.BACKEND_URL || "http://localhost:4000/";
+    const token = localStorage.getItem("authToken");
+
+    if (!token) throw new Error("No autenticado");
+
+    const query = `query MyProfile { myProfile { id email name phone addresses { id content } savedCards { id last4 brand } } }`;
+
+    try {
+      const res = await fetch(backend, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query }),
+      });
+      if (!res.ok) throw new Error(`Servidor respondió ${res.status}`);
+      const json = await res.json();
+      if (json.errors)
+        throw new Error(json.errors[0].message || "Error getMyProfile");
+      return json.data?.myProfile || null;
+    } catch (err) {
+      console.error("getMyProfile error:", err);
+      throw err;
+    }
+  },
+
+  async myOrders() {
+    await this.delay(300);
+    const backend = window.BACKEND_URL || "http://localhost:4000/";
+    const token = localStorage.getItem("authToken");
+
+    if (!token) throw new Error("No autenticado");
+
+    const query = `query MyOrders { myOrders { id total status createdAt } }`;
+
+    try {
+      const res = await fetch(backend, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query }),
+      });
+      if (!res.ok) throw new Error(`Servidor respondió ${res.status}`);
+      const json = await res.json();
+      if (json.errors)
+        throw new Error(json.errors[0].message || "Error myOrders");
+      return json.data?.myOrders || [];
+    } catch (err) {
+      console.error("myOrders error:", err);
+      throw err;
+    }
+  },
+
+  // ============================
+  // PERFIL: Direcciones, Tarjetas y Actualización de perfil
+  // ============================
+
+  async updateProfile(email, phone) {
+    await this.delay(200);
+    const backend = window.BACKEND_URL || "http://localhost:4000/";
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("No autenticado");
+
+    const query = `mutation UpdateProfile($email:String, $phone:String){ updateProfile(email:$email, phone:$phone){ id email phone name } }`;
+    try {
+      const res = await fetch(backend, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query, variables: { email, phone } }),
+      });
+      if (!res.ok) throw new Error(`Servidor respondió ${res.status}`);
+      const json = await res.json();
+      if (json.errors)
+        throw new Error(json.errors[0].message || "Error updateProfile");
+      return json.data?.updateProfile || null;
+    } catch (err) {
+      console.error("updateProfile error:", err);
+      throw err;
+    }
+  },
+
+  async addAddress(content) {
+    await this.delay(200);
+    const backend = window.BACKEND_URL || "http://localhost:4000/";
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("No autenticado");
+
+    const query = `mutation AddAddress($content:String!){ addAddress(content:$content){ id content } }`;
+    try {
+      const res = await fetch(backend, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query, variables: { content } }),
+      });
+      if (!res.ok) throw new Error(`Servidor respondió ${res.status}`);
+      const json = await res.json();
+      if (json.errors)
+        throw new Error(json.errors[0].message || "Error addAddress");
+      return json.data?.addAddress || null;
+    } catch (err) {
+      console.error("addAddress error:", err);
+      throw err;
+    }
+  },
+
+  async deleteAddress(addressId) {
+    await this.delay(200);
+    const backend = window.BACKEND_URL || "http://localhost:4000/";
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("No autenticado");
+
+    const query = `mutation DeleteAddress($id:ID!){ deleteAddress(id:$id){ success message } }`;
+    try {
+      const res = await fetch(backend, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query, variables: { id: addressId } }),
+      });
+      if (!res.ok) throw new Error(`Servidor respondió ${res.status}`);
+      const json = await res.json();
+      if (json.errors)
+        throw new Error(json.errors[0].message || "Error deleteAddress");
+      return json.data?.deleteAddress || { success: false };
+    } catch (err) {
+      console.error("deleteAddress error:", err);
+      throw err;
+    }
+  },
+
+  async deleteCard(cardId) {
+    await this.delay(200);
+    const backend = window.BACKEND_URL || "http://localhost:4000/";
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("No autenticado");
+
+    const query = `mutation DeleteCard($cardId:ID!){ deleteCard(cardId:$cardId){ id savedCards{ id last4 brand } } }`;
+    try {
+      const res = await fetch(backend, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query, variables: { cardId } }),
+      });
+      if (!res.ok) throw new Error(`Servidor respondió ${res.status}`);
+      const json = await res.json();
+      if (json.errors)
+        throw new Error(json.errors[0].message || "Error deleteCard");
+      return json.data?.deleteCard?.savedCards || [];
+    } catch (err) {
+      console.error("deleteCard error:", err);
+      throw err;
+    }
+  },
 };
 
 // Exponer API globalmente

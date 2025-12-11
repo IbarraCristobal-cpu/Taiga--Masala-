@@ -6,10 +6,38 @@
     <title>Finalizar Compra - Malasa</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        // Login ahora gestionado por `login_handler.js` (handler centralizado)
-       <style>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* ==================== VARIABLES ==================== */
       :root {
         --color-primario: #ff9933;
+        --color-secundario: #8b4513;
+        --color-accion-primaria: #ff9933;
+        --color-accion-secundaria: #6a350f;
+        --color-texto: #333;
+        --color-texto-secundario: #666;
+        --color-surface: #f5f5f5;
+        --color-fondo: #fafafa;
+        --color-descuento: #4caf50;
+      }
+      .navbar {
+        background-color: var(--color-surface);
+        padding: 0.5rem 1rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .navbar-container {
+        width: 100%;
+        max-width: 1140px;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
         align-items: center;
       }
       .navbar-brand {
@@ -22,142 +50,332 @@
         align-items: center;
       }
       .navbar-brand img {
-        margin-right: 0.5rem;
-        border-radius: 50%;
         width: 40px;
         height: 40px;
         object-fit: cover;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+      }
+      .navbar-nav {
+        list-style: none;
+        display: flex;
+        gap: 1.5rem;
+        margin: 0;
       }
       .nav-link {
-        border-bottom: none;
-        margin-bottom: 0;
-        padding-bottom: 0;
-      }
-      .form-section h3 {
-        font-size: 1.2em;
-        margin: 0 0 1em 0;
         color: var(--color-texto);
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
       }
+      .nav-link.active,
+      .nav-link:hover {
+        color: var(--color-primario);
+      }
+
+      /* Estilos específicos para botones de estado (ocultos por defecto) */
+      #nav-btn-admin,
+      #nav-btn-logout,
+      #nav-btn-profile {
+        display: none; /* Se activan vía JS */
+      }
+      #nav-btn-admin {
+        color: #d32f2f;
+      }
+
+      /* ==================== LAYOUT GENERAL ==================== */
+      body {
+        font-family: "Poppins", sans-serif;
+        line-height: 1.6;
+        color: var(--color-texto);
+        background-color: var(--color-fondo);
+      }
+
+      .checkout-container {
+        max-width: 900px;
+        margin: 3rem auto;
+        padding: 0 1rem;
+      }
+
+      .page-title {
+        font-family: "Lora", serif;
+        font-size: 2.5rem;
+        color: var(--color-texto);
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      /* ==================== FORMULARIO ==================== */
+      .form-section {
+        background: white;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+      }
+
+      .form-section h3 {
+        font-size: 1.2rem;
+        margin: 0 0 1rem 0;
+        color: var(--color-texto);
+        border-bottom: 2px solid var(--color-primario);
+        padding-bottom: 0.5rem;
+      }
+
       .form-section label {
         font-weight: 600;
         display: block;
-        margin-bottom: 0.5em;
-        font-size: 0.9em;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--color-texto);
       }
+
+      .form-section input,
       .form-section select,
-      .form-section input[type="text"],
-      .form-section input[type="number"],
       .form-section textarea {
         width: 100%;
-        padding: 0.8em;
-        border: 1px solid #ccc;
+        padding: 0.8rem;
+        border: 1px solid #ddd;
         border-radius: 5px;
-        font-size: 1em;
+        font-size: 1rem;
         box-sizing: border-box;
-        background-color: #fff;
+        background-color: white;
+        font-family: "Poppins", sans-serif;
+        transition: border-color 0.3s;
       }
-      .form-row {
+
+      .form-section input:focus,
+      .form-section select:focus,
+      .form-section textarea:focus {
+        outline: none;
+        border-color: var(--color-primario);
+        box-shadow: 0 0 5px rgba(255, 153, 51, 0.2);
+      }
+
+      /* ==================== OPCIONES DE ENTREGA ==================== */
+      .delivery-options {
         display: flex;
-        gap: 1em;
-      }
-      .form-row .form-field {
-        flex: 1;
-      }
-      .checkbox-group {
-        display: flex;
-        align-items: center;
-        margin-top: 1em;
-      }
-      .checkbox-group input[type="checkbox"] {
-        margin-right: 0.5em;
-        width: auto;
-      }
-      .checkbox-group label {
-        margin-bottom: 0;
-        font-weight: normal;
-        font-size: 0.9em;
+        gap: 2rem;
+        margin-top: 1rem;
       }
 
       .delivery-options label {
-        display: inline-block;
-        margin-right: 1.5em;
+        display: flex;
+        align-items: center;
         font-weight: normal;
-      }
-      .delivery-options input[type="radio"] {
-        margin-right: 0.5em;
+        cursor: pointer;
+        gap: 0.5rem;
       }
 
-      .address-section {
-        margin-top: 1em;
+      .delivery-options input[type="radio"] {
+        width: auto;
+        cursor: pointer;
       }
+
+      /* ==================== DIRECCIÓN ==================== */
+      .address-section {
+        margin-top: 1rem;
+      }
+
+      .address-section.hidden {
+        display: none;
+      }
+
+      .address-options {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
       .address-new-fields {
         display: flex;
         flex-direction: column;
-        gap: 0.8em;
-        margin-top: 1em;
+        gap: 0.8rem;
+        padding: 1rem;
+        background-color: var(--color-surface);
+        border-radius: 5px;
+        margin-top: 0.5rem;
       }
 
+      .divider {
+        text-align: center;
+        color: var(--color-texto-secundario);
+        font-size: 0.9rem;
+        margin: 0.5rem 0;
+      }
+
+      /* ==================== MÉTODO DE PAGO ==================== */
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .card-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .card-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      /* ==================== CHECKBOX ==================== */
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .checkbox-group input[type="checkbox"] {
+        width: auto;
+        cursor: pointer;
+      }
+
+      .checkbox-group label {
+        margin-bottom: 0;
+        font-weight: normal;
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+
+      /* ==================== BOTÓN SUBMIT ==================== */
       .submit-button {
         width: 100%;
-        padding: 1em;
-        margin-top: 2em;
+        padding: 1rem;
         border: none;
         border-radius: 8px;
-        font-size: 1.1em;
+        font-size: 1.1rem;
         font-weight: 700;
         cursor: pointer;
         background-color: var(--color-accion-primaria);
         color: white;
-        transition: transform 0.2s;
-      }
-      .submit-button:hover {
-        transform: scale(1.02);
+        transition: all 0.3s;
+        font-family: "Poppins", sans-serif;
       }
 
-      
-    .modal-card .card-title {
-      font-family: "Lora", serif;
-      color: #8b4513;
-      font-weight: 600;
-      font-size: 2em;
-      margin-bottom: 1.5em;
-    }
-    .modal-card .form-floating {
-      position: relative;
-      margin-bottom: 1.5rem;
-      text-align: left;
-    }
-    .modal-card .form-control {
-      width: 100%;
-      padding: 1rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: #fff;
-      box-sizing: border-box;
-    }
-    .modal-card .btn-primary {
-      background-color: #8b4513;
-      border: none;
-      border-radius: 25px;
-      padding: 0.8em;
-      font-size: 1.1em;
-      font-weight: 600;
-      color: white;
-      width: 100%;
-      cursor: pointer;
-      margin-bottom: 1.5em;
-    }
-    .modal-card .btn-primary:hover {
-      background-color: #6a350f;
-    }
-    .modal-card .register-link a {
-      color: #8b4513;
-      font-weight: 600;
-      text-decoration: none;
-    }
-  </style>
+      .submit-button:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 153, 51, 0.3);
+      }
+
+      .submit-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      /* ==================== MODAL LOGIN ==================== */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .modal-overlay.hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .modal-card {
+        background-color: #fff8e1;
+        border-radius: 10px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 500px;
+        padding: 2.5rem;
+        position: relative;
+      }
+
+      .close-modal-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 2rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #666;
+      }
+
+      .modal-card .card-title {
+        font-family: "Lora", serif;
+        color: var(--color-secundario);
+        font-weight: 600;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      .modal-card .form-floating {
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-card .form-control {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background: white;
+        font-size: 1rem;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .modal-card .btn-primary {
+        width: 100%;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 25px;
+        background-color: var(--color-secundario);
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-bottom: 1.5rem;
+        font-family: "Poppins", sans-serif;
+        transition: background-color 0.3s;
+      }
+
+      .modal-card .btn-primary:hover {
+        background-color: var(--color-accion-secundaria);
+      }
+
+      .modal-card .forgot-password {
+        display: block;
+        text-align: right;
+        margin-bottom: 1rem;
+        color: var(--color-secundario);
+        text-decoration: none;
+        font-size: 0.9rem;
+      }
+
+      .modal-card .register-link {
+        text-align: center;
+        font-size: 0.85rem;
+      }
+
+      .modal-card .register-link a {
+        color: var(--color-secundario);
+        font-weight: 600;
+        text-decoration: none;
+      }
+    </style>
+  </head>
   <body>
+    <!-- ==================== NAVEGACIÓN ==================== -->
     <nav class="navbar">
       <div class="navbar-container">
         <a class="navbar-brand" href="#">
@@ -172,21 +390,16 @@
               >Contacto</a
             >
           </li>
-
-          <!-- Botones Dinámicos (Controlados por menu_logic.js) -->
           <li>
             <a class="nav-link" id="nav-btn-login" href="#">Iniciar Sesión</a>
           </li>
-
-          <!-- Estos están ocultos por defecto (display: none) -->
           <li>
             <a
               class="nav-link"
               id="nav-btn-profile"
               href="B08_B09-Perfil_de_usuario.html"
               style="display: none"
-            >
-              Mi Perfil</a
+              >Mi Perfil</a
             >
           </li>
           <li>
@@ -204,69 +417,56 @@
               id="nav-btn-logout"
               href="B07-Home.html"
               style="display: none"
-            >
-              Salir</a
+              >Salir</a
             >
           </li>
         </ul>
       </div>
     </nav>
 
+    <!-- ==================== MODAL DE LOGIN ==================== -->
+    <div
+      id="login-modal"
+      class="modal-overlay hidden"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="modal-card">
+        <button class="close-modal-btn" aria-label="Cerrar">&times;</button>
+        <h3 class="card-title">Iniciar Sesión</h3>
+        <form id="login-form">
+          <div class="form-floating">
+            <input type="email" class="form-control" id="emailLogin" required />
+            <label for="emailLogin">Correo Electrónico</label>
+          </div>
+          <div class="form-floating">
+            <input
+              type="password"
+              class="form-control"
+              id="passLogin"
+              required
+            />
+            <label for="passLogin">Contraseña</label>
+          </div>
+          <a href="B03-Recuperar_Contraseña.html" class="forgot-password"
+            >¿Olvidaste tu contraseña?</a
+          >
+          <button class="btn-primary" type="submit">Ingresar</button>
+        </form>
+        <div class="register-link">
+          <small
+            >¿No tienes una cuenta?
+            <a href="B01-Formulario_de_registro.html">Regístrate Aquí</a></small
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== CONTENEDOR PRINCIPAL ==================== -->
     <main class="checkout-container">
       <h2 class="page-title">Finalizar compra</h2>
       <form id="checkout-form">
-        <div
-          id="login-modal"
-          class="modal-overlay hidden"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div class="modal-card">
-            <button class="close-modal-btn" aria-label="Cerrar">&times;</button>
-            <h3 class="card-title">Iniciar Sesión</h3>
-            <form id="login-form">
-              <div class="form-floating">
-                <input
-                  type="email"
-                  class="form-control"
-                  id="emailLogin"
-                  required
-                />
-                <label for="emailLogin">Correo Electrónico</label>
-              </div>
-              <div class="form-floating">
-                <input
-                  type="password"
-                  class="form-control"
-                  id="passLogin"
-                  required
-                />
-                <label for="passLogin">Contraseña</label>
-              </div>
-              <a
-                href="B03-Recuperar_Contraseña.html"
-                class="forgot-password"
-                style="
-                  display: block;
-                  text-align: right;
-                  margin-bottom: 1em;
-                  color: #8b4513;
-                  text-decoration: none;
-                "
-                >¿Olvidaste tu contraseña?</a
-              >
-              <button class="btn-primary" type="submit">Ingresar</button>
-            </form>
-            <div class="register-link">
-              <small
-                >¿No tienes una cuenta?
-                <a href="B01-Formulario_de_registro.html"
-                  >Regístrate Aquí</a
-                ></small
-              >
-            </div>
-          </div>
-        </div>
+        <!-- Tipo de Entrega -->
         <div class="form-section">
           <h3>Tipo de Entrega</h3>
           <div class="delivery-options">
@@ -281,38 +481,37 @@
           </div>
         </div>
 
-        <div id="address-section" class="form-section hidden">
+        <!-- Dirección de Envío (Solo si delivery) -->
+        <div id="address-section" class="form-section address-section hidden">
           <h3>Dirección de Envío</h3>
           <div class="address-options">
-            <label for="saved-address-select">Usar dirección guardada</label>
-            <select id="saved-address-select">
-              <option value="">-- Seleccione una dirección --</option>
-            </select>
-            <p
-              style="
-                margin: 1em 0 0.5em 0;
-                text-align: center;
-                color: var(--color-texto-secundario);
-              "
-            >
-              O
-            </p>
-            <label>Agregar nueva dirección</label>
-            <div class="address-new-fields">
-              <input
-                type="text"
-                id="new-address-street"
-                placeholder="Calle y Número"
-              />
-              <input
-                type="text"
-                id="new-address-details"
-                placeholder="Depto / Casa / Oficina (Opcional)"
-              />
-              <input type="text" id="new-address-city" placeholder="Comuna" />
+            <div class="form-group">
+              <label for="saved-address-select">Usar dirección guardada</label>
+              <select id="saved-address-select">
+                <option value="">-- Seleccione una dirección --</option>
+              </select>
+            </div>
+            <p class="divider">O</p>
+            <div>
+              <label>Agregar nueva dirección</label>
+              <div class="address-new-fields">
+                <input
+                  type="text"
+                  id="new-address-street"
+                  placeholder="Calle y Número"
+                />
+                <input
+                  type="text"
+                  id="new-address-details"
+                  placeholder="Depto / Casa / Oficina (Opcional)"
+                />
+                <input type="text" id="new-address-city" placeholder="Comuna" />
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- Método de Pago -->
         <div class="form-section">
           <h3>Método de Pago</h3>
           <div class="form-group">
@@ -321,41 +520,33 @@
               <option value="">-- Seleccione una tarjeta --</option>
             </select>
           </div>
-          <p
-            style="
-              margin: 1em 0 0.5em 0;
-              text-align: center;
-              color: var(--color-texto-secundario);
-            "
-          >
-            O
-          </p>
-          <label>Agregar nueva tarjeta</label>
-          <input
-            type="text"
-            id="card-number"
-            placeholder="Número de Tarjeta (XXXX XXXX XXXX XXXX)"
-            maxlength="19"
-            autocomplete="cc-number"
-          />
-          <div class="form-row" style="margin-top: 1em">
-            <div class="form-field">
+          <p class="divider">O</p>
+          <div>
+            <label for="card-number">Agregar nueva tarjeta</label>
+            <div class="card-inputs">
               <input
                 type="text"
-                id="card-expiry"
-                placeholder="MM/AA"
-                maxlength="5"
-                autocomplete="cc-exp"
+                id="card-number"
+                placeholder="Número de Tarjeta (XXXX XXXX XXXX XXXX)"
+                maxlength="19"
+                autocomplete="cc-number"
               />
-            </div>
-            <div class="form-field">
-              <input
-                type="text"
-                id="card-cvv"
-                placeholder="CVV"
-                maxlength="4"
-                autocomplete="cc-csc"
-              />
+              <div class="card-row">
+                <input
+                  type="text"
+                  id="card-expiry"
+                  placeholder="MM/AA"
+                  maxlength="5"
+                  autocomplete="cc-exp"
+                />
+                <input
+                  type="text"
+                  id="card-cvv"
+                  placeholder="CVV"
+                  maxlength="4"
+                  autocomplete="cc-csc"
+                />
+              </div>
             </div>
           </div>
           <div class="checkbox-group">
@@ -366,214 +557,15 @@
           </div>
         </div>
 
+        <!-- Botón Submit -->
         <button type="submit" class="submit-button">Finalizar Compra</button>
       </form>
     </main>
 
+    <!-- ==================== SCRIPTS ==================== -->
     <script src="api.js"></script>
     <script src="menu_logic.js"></script>
-    <script src="login_handler.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        let savedCards = [
-          { id: 1, type: "Visa", last4: "4246", expiry: "12/2028" },
-          { id: 2, type: "Visa", last4: "7425", expiry: "08/2026" },
-        ];
-        let savedAddresses = [
-          { id: 101, street: "Av. Providencia 1322", city: "Providencia" },
-          { id: 102, street: "Calle Falsa 123", city: "Providencia" },
-        ];
-
-        const checkoutForm = document.getElementById("checkout-form");
-        const deliveryTypeRadios = document.querySelectorAll(
-          'input[name="deliveryType"]'
-        );
-        const addressSection = document.getElementById("address-section");
-        const savedCardsSelect = document.getElementById("saved-cards-select");
-        const saveCardCheckbox = document.getElementById("save-card-checkbox");
-        const cardNumberInput = document.getElementById("card-number");
-        const savedAddressSelect = document.getElementById(
-          "saved-address-select"
-        );
-
-        const renderSavedCardsDropdown = () => {
-          savedCardsSelect.innerHTML =
-            '<option value="">-- Seleccione una tarjeta --</option>';
-          savedCards.forEach((card) => {
-            const option = document.createElement("option");
-            option.value = card.id;
-            option.textContent = `${card.type} terminada en ${card.last4}`;
-            savedCardsSelect.appendChild(option);
-          });
-        };
-
-        const renderSavedAddressesDropdown = () => {
-          savedAddressSelect.innerHTML =
-            '<option value="">-- Seleccione una dirección --</option>';
-          savedAddresses.forEach((address) => {
-            const option = document.createElement("option");
-            option.value = address.id;
-            option.textContent = `${address.street}, ${address.city}`;
-            savedAddressSelect.appendChild(option);
-          });
-        };
-
-        // Función para actualizar selects
-        const updateDropdowns = () => {
-          renderSavedCardsDropdown();
-          renderSavedAddressesDropdown();
-        };
-
-        deliveryTypeRadios.forEach((radio) => {
-          radio.addEventListener("change", (event) => {
-            if (event.target.value === "delivery") {
-              addressSection.classList.remove("hidden");
-            } else {
-              addressSection.classList.add("hidden");
-            }
-          });
-        });
-
-        // Simular finalizar Compra
-        checkoutForm.addEventListener("submit", (event) => {
-          event.preventDefault();
-
-          const deliveryType = document.querySelector(
-            'input[name="deliveryType"]:checked'
-          ).value;
-          if (deliveryType === "delivery") {
-            const selectedAddress = savedAddressSelect.value;
-            const newStreet =
-              document.getElementById("new-address-street").value;
-            if (!selectedAddress && !newStreet) {
-              alert("Por favor, seleccione o ingrese una dirección de envío.");
-              return;
-            }
-          }
-
-          const selectedCard = savedCardsSelect.value;
-          const newCardNumber = cardNumberInput.value;
-          if (!selectedCard && !newCardNumber) {
-            alert("Por favor, seleccione o ingrese un método de pago.");
-            return;
-          }
-
-          if (
-            saveCardCheckbox.checked &&
-            newCardNumber.replace(/\s/g, "").length >= 16
-          ) {
-            const newCard = {
-              id: Date.now(),
-              type: "Visa",
-              last4: newCardNumber.replace(/\s/g, "").slice(-4),
-              expiry: document.getElementById("card-expiry").value || "N/A",
-            };
-            savedCards.push(newCard);
-            updateDropdowns();
-            alert(
-              `¡Compra exitosa! Tarjeta terminada en ${newCard.last4} guardada.`
-            );
-            cardNumberInput.value = "";
-            document.getElementById("card-expiry").value = "";
-            document.getElementById("card-cvv").value = "";
-            saveCardCheckbox.checked = false;
-          } else {
-            alert("¡Compra exitosa!");
-          }
-        });
-
-        cardNumberInput.addEventListener("input", (e) => {
-          const value = e.target.value.replace(/\D/g, "");
-          const groups = value.match(/.{1,4}/g);
-          e.target.value = groups ? groups.join(" ").slice(0, 19) : "";
-        });
-
-        // Auto-formatear fecha de expiración MM/AA
-        document
-          .getElementById("card-expiry")
-          .addEventListener("input", (e) => {
-            let value = e.target.value.replace(/\D/g, ""); // Solo dígitos
-            if (value.length > 2) {
-              value = value.slice(0, 2) + "/" + value.slice(2);
-            }
-            e.target.value = value.slice(0, 5);
-          });
-
-        updateDropdowns();
-      });
-      document.addEventListener("DOMContentLoaded", () => {
-        const loginModal = document.getElementById("login-modal");
-        const loginNavLink = document.getElementById("nav-btn-login");
-        const closeButtons = loginModal
-          ? loginModal.querySelectorAll(".close-modal-btn")
-          : [];
-        const loginForm = document.getElementById("login-form");
-
-        const openModal = () => {
-          if (loginModal) loginModal.classList.remove("hidden");
-        };
-        const closeModal = () => {
-          if (loginModal) loginModal.classList.add("hidden");
-        };
-
-        if (loginNavLink)
-          loginNavLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            openModal();
-          });
-        closeButtons.forEach((btn) =>
-          btn.addEventListener("click", closeModal)
-        );
-        if (loginModal)
-          loginModal.addEventListener("click", (e) => {
-            if (e.target === loginModal) closeModal();
-          });
-
-        // Login ahora gestionado por `login_handler.js` (handler centralizado)
-      });
-      // Función para el botón "Pagar" o "Finalizar Compra"
-      async function procesarPago() {
-        const token = localStorage.getItem("authToken");
-
-        // 1. Validar Autenticación
-        if (!token) {
-          const confirmar = confirm(
-            "Necesitas iniciar sesión para completar tu pedido. ¿Ir al login?"
-          );
-          if (confirmar) {
-            window.location.href = "B02-Inicio_seccion.html";
-          }
-          return;
-        }
-
-        // 2. Obtener datos del carrito (desde localStorage o variable global)
-        // Supongamos que tu carrito se ve así: [{ productId: "123", quantity: 2 }]
-        const carritoItems = JSON.parse(localStorage.getItem("cart")) || [];
-
-        if (carritoItems.length === 0) {
-          alert("Tu carrito está vacío");
-          return;
-        }
-
-        // 3. Obtener dirección (si es delivery)
-        const direccion = prompt("Ingresa tu dirección de envío:");
-        if (!direccion) return;
-
-        try {
-          // 4. Enviar pedido al Backend
-          const orden = await API.placeOrder(carritoItems, direccion);
-
-          alert(
-            `¡Pedido realizado con éxito! ID: ${orden.id}. Estado: ${orden.status}`
-          );
-
-          // Limpiar carrito
-          localStorage.removeItem("cart");
-          window.location.reload(); // O redirigir a 'Mis Pedidos'
-        } catch (error) {
-          alert("Error al procesar el pedido: " + error.message);
-        }
-      }
-    </script>
+    <script src="utils/login_handler.js"></script>
+    <script src="checkout.js"></script>
   </body>
 </html>

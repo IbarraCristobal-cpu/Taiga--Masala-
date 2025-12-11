@@ -364,8 +364,7 @@
             <a href="#">Modificar</a>
           </div>
           <div class="form-group">
-            <label for="name">Nombre</label>
-            <input type="text" id="name" value="Cristobal" readonly />
+            <!-- Nombre removido: solo permitimos editar email y teléfono -->
           </div>
           <div class="form-group">
             <label for="phone">Teléfono</label>
@@ -386,31 +385,25 @@
           <div class="section-header">
             <h3>TUS DIRECCIONES</h3>
           </div>
-          <button class="action-button">+ Agregar Dirección</button>
+          <button id="add-address-btn" class="action-button">
+            + Agregar Dirección
+          </button>
+          <div id="addresses-list" style="margin-top: 1rem"></div>
 
-          <h3>MIS TARJETAS</h3>
-          <p class="empty-state">AÚN NO HAS GUARDADO NINGUNA TARJETA.</p>
-          <button class="action-button">AGREGAR TARJETA</button>
+          <h3 style="margin-top: 1.5rem">MIS TARJETAS</h3>
+          <div id="cards-list" style="margin-top: 0.5rem"></div>
+          <button
+            id="add-card-btn"
+            class="action-button"
+            style="margin-top: 0.5rem"
+          >
+            AGREGAR TARJETA
+          </button>
 
           <div class="section-header">
             <h3>ÚLTIMOS PEDIDOS</h3>
           </div>
-          <div class="recent-orders-list">
-            <div class="order-item">
-              <div>
-                <p class="order-id">Pedido #123 - 25/09/24</p>
-                <p class="order-total">Total: $27.539</p>
-              </div>
-              <span class="order-status status-enviado">Enviado</span>
-            </div>
-            <div class="order-item">
-              <div>
-                <p class="order-id">Pedido #1357 - 22/09/24</p>
-                <p class="order-total">Total: $23.539</p>
-              </div>
-              <span class="order-status status-entregado">Entregado</span>
-            </div>
-          </div>
+          <div id="recent-orders-list" class="recent-orders-list"></div>
           <a href="#" class="view-all-orders-link"
             >Ver historial completo &rarr;</a
           >
@@ -460,124 +453,7 @@
     </div>
     <script src="api.js"></script>
     <script src="menu_logic.js"></script>
-    <script src="login_handler.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const loginModal = document.getElementById("login-modal");
-        const loginNavLink = document.getElementById("nav-btn-login");
-        const closeButtons = loginModal
-          ? loginModal.querySelectorAll(".close-modal-btn")
-          : [];
-        const loginForm = document.getElementById("login-form");
-
-        const openModal = () => {
-          if (loginModal) loginModal.classList.remove("hidden");
-        };
-        const closeModal = () => {
-          if (loginModal) loginModal.classList.add("hidden");
-        };
-
-        if (loginNavLink)
-          loginNavLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            openModal();
-          });
-        closeButtons.forEach((btn) =>
-          btn.addEventListener("click", closeModal)
-        );
-        if (loginModal)
-          loginModal.addEventListener("click", (e) => {
-            if (e.target === loginModal) closeModal();
-          });
-
-        // Login ahora gestionado por `login_handler.js` (handler centralizado)
-      });
-      document.addEventListener("DOMContentLoaded", () => {
-        const loginModal = document.getElementById("login-modal");
-        const loginNavLink = document.getElementById("nav-btn-login");
-        const closeButtons = loginModal
-          ? loginModal.querySelectorAll(".close-modal-btn")
-          : [];
-        const loginForm = document.getElementById("login-form");
-
-        const openModal = () => {
-          if (loginModal) loginModal.classList.remove("hidden");
-        };
-        const closeModal = () => {
-          if (loginModal) loginModal.classList.add("hidden");
-        };
-
-        if (loginNavLink)
-          loginNavLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            openModal();
-          });
-        closeButtons.forEach((btn) =>
-          btn.addEventListener("click", closeModal)
-        );
-        if (loginModal)
-          loginModal.addEventListener("click", (e) => {
-            if (e.target === loginModal) closeModal();
-          });
-
-        // Login ahora gestionado por `login_handler.js` (handler centralizado)
-      });
-      // Script para B08-Perfil.html
-      document.addEventListener("DOMContentLoaded", async () => {
-        // 1. SEGURIDAD: Verificar si hay token
-        const token = localStorage.getItem("authToken");
-        if (!token) {
-          alert("Debes iniciar sesión para ver tu perfil.");
-          window.location.href = "B02-Inicio_seccion.html";
-          return;
-        }
-
-        // 2. CARGAR DATOS
-        try {
-          // Asumiendo que tengas campos con estos IDs en tu HTML
-          const inputNombre = document.getElementById("profileName");
-          const inputEmail = document.getElementById("profileEmail");
-          const inputTelefono = document.getElementById("profilePhone");
-          const containerDirecciones =
-            document.getElementById("addresses-list");
-
-          // Pedir datos a la API
-          const user = await API.getMyProfile();
-
-          // Rellenar formulario
-          if (inputNombre) inputNombre.value = user.name || "";
-          if (inputEmail) inputEmail.value = user.email || "";
-          if (inputTelefono) inputTelefono.value = user.phone || "";
-
-          // Mostrar direcciones (si tienes un contenedor para ellas)
-          if (containerDirecciones && user.addresses) {
-            containerDirecciones.innerHTML = user.addresses
-              .map(
-                (addr) =>
-                  `<li>${addr.content} <button onclick="borrarDireccion('${addr.id}')">X</button></li>`
-              )
-              .join("");
-          }
-        } catch (error) {
-          console.error(error);
-          alert("Error cargando perfil. Tu sesión puede haber expirado.");
-          API.logout(); // Cerrar sesión si el token es inválido
-        }
-      });
-
-      // Función para guardar cambios (conectar al botón de "Guardar")
-      async function guardarPerfil() {
-        const nombre = document.getElementById("profileName").value;
-        const telefono = document.getElementById("profilePhone").value;
-
-        try {
-          // Necesitas agregar esta función updateProfile en tu api.js si no la tienes
-          // await API.updateProfile(nombre, telefono);
-          alert("Perfil actualizado correctamente");
-        } catch (e) {
-          alert("Error al guardar: " + e.message);
-        }
-      }
-    </script>
+    <script src="utils/login_handler.js"></script>
+    <script src="profile.js"></script>
   </body>
 </html>

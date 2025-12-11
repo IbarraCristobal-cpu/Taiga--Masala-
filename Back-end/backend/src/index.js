@@ -41,7 +41,7 @@ async function startServer() {
     },
   });
 
-  console.log(`🚀 Servidor listo en: ${url}`);
+  console.log(` Servidor listo en: ${url}`);
 }
 
 startServer();

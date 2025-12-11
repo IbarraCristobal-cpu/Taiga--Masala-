@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Backup - B03-Recuperar_Contraseña</title>
+  </head>
+  <body>
+    <!-- Copia de seguridad del archivo original B03-Recuperar_Contraseña.html -->
+    <!-- Fecha de archivo: 2025-12-10 -->
+
+    <!-- Contenido original a continuación -->
+
+    <!DOCTYPE html>
+    <html lang="es">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Recuperar Contraseña - Malasa</title>
+        <!-- Fuentes -->
+        <link
+          href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Open+Sans:wght@400;600&display=swap"
+          rel="stylesheet"
+        />
+        <style>
+          :root {
+            --color-primario: #ff9933;
+            --color-secundario: #8b4513;
+            --color-fondo: #fff8e1;
+            --color-texto: #4a2e2a;
+            --color-fondo-pagina: #f0f0f0;
+            --color-accion: #007bff;
+            --fuente-titulos: "Lora", serif;
+            --fuente-cuerpo: "Open Sans", sans-serif;
+          }
+          body {
+            font-family: var(--fuente-cuerpo);
+            background-color: var(--color-fondo-pagina);
+            color: var(--color-texto);
+            margin: 0;
+            padding: 2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+          }
+          .container {
+            width: 100%;
+            max-width: 500px;
+          }
+          .card {
+            background-color: var(--color-fondo);
+            border-radius: 10px;
+            padding: 2.5em;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+          }
+          .card-title {
+            font-family: var(--fuente-titulos);
+            color: var(--color-secundario);
+            font-size: 2em;
+            margin-bottom: 0.5em;
+          }
+          .form-control {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1rem;
+          }
+          .btn-primary {
+            background-color: var(--color-accion);
+            color: white;
+            padding: 0.8em;
+            width: 100%;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+          }
+          .btn-primary:hover {
+            background-color: #0056b3;
+          }
+          .link-secondary {
+            color: var(--color-secundario);
+            text-decoration: none;
+            display: block;
+            margin-top: 1.5em;
+            font-size: 0.9em;
+          }
+          .link-secondary:hover {
+            text-decoration: underline;
+          }
+          .hidden {
+            display: none;
+            opacity: 0;
+          }
+          /* Animación simple para transición suave */
+          .fade-in {
+            animation: fadeIn 0.5s forwards;
+          }
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          .alert-simulation {
+            background-color: #e3f2fd;
+            border: 1px solid #2196f3;
+            color: #0d47a1;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            text-align: left;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="card">
+            <!-- VISTA 1: SOLICITAR EMAIL -->
+            <div id="step-1-view" class="fade-in">
+              <h3 class="card-title">Recuperar Acceso</h3>
+              <p>Ingresa tu correo para buscar tu cuenta.</p>
+              <form id="form-step-1">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="emailRecovery"
+                  placeholder="tu@correo.com"
+                  required
+                />
+                <button class="btn-primary" type="submit">Buscar Cuenta</button>
+              </form>
+              <a href="B02-Inicio_seccion.html" class="link-secondary"
+                >Volver al Inicio de Sesión</a
+              >
+            </div>
+
+            <!-- VISTA 2: CÓDIGO Y NUEVA CONTRASEÑA -->
+            <div id="step-2-view" class="hidden">
+              <h3 class="card-title">Restablecer</h3>
+
+              <div class="alert-simulation">
+                <strong>📧 Simulación de Correo:</strong><br />
+                Tu código de seguridad es:
+                <b id="simulation-code-display">0000</b>
+              </div>
+
+              <p style="font-size: 0.9em; margin-bottom: 1em">
+                Hemos enviado un código a <b id="user-email-display"></b>.
+              </p>
+
+              <form id="form-step-2">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputCode"
+                  placeholder="Ingresa el código de 4 dígitos"
+                  required
+                  maxlength="4"
+                  pattern="\\d{4}"
+                  title="Debe ser el código de 4 dígitos mostrado arriba"
+                />
+                <hr
+                  style="border: 0; border-top: 1px solid #eee; margin: 1em 0"
+                />
+                <input
+                  type="password"
+                  class="form-control"
+                  id="newPassword"
+                  placeholder="Nueva Contraseña"
+                  required
+                  minlength="4"
+                />
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirmPassword"
+                  placeholder="Confirmar Nueva Contraseña"
+                  required
+                />
+                <button class="btn-primary" type="submit">
+                  Cambiar Contraseña
+                </button>
+              </form>
+              <button
+                id="btn-cancel"
+                style="
+                  background: none;
+                  border: none;
+                  color: #888;
+                  margin-top: 1em;
+                  cursor: pointer;
+                  text-decoration: underline;
+                "
+              >
+                Cancelar
+              </button>
+            </div>
+
+            <!-- VISTA 3: ÉXITO -->
+            <div id="step-3-view" class="hidden">
+              <div style="color: #4caf50; font-size: 4em; margin-bottom: 0.2em">
+                ✓
+              </div>
+              <h3 class="card-title">¡Contraseña Actualizada!</h3>
+              <p>Ya puedes acceder con tu nueva credencial.</p>
+              <a
+                href="B02-Inicio_seccion.html"
+                class="btn-primary"
+                style="
+                  text-decoration: none;
+                  display: inline-block;
+                  margin-top: 1em;
+                "
+              >
+                Ir a Iniciar Sesión
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Script de lógica específica para Recuperación -->
+        <!-- Nota: Sobrescribimos la lógica para que funcione localmente sin backend complejo -->
+        <script>
+          // Referencias al DOM
+          const view1 = document.getElementById("step-1-view");
+          const view2 = document.getElementById("step-2-view");
+          const view3 = document.getElementById("step-3-view");
+
+          const form1 = document.getElementById("form-step-1");
+          const form2 = document.getElementById("form-step-2");
+
+          const emailInput = document.getElementById("emailRecovery");
+          const userEmailDisplay =
+            document.getElementById("user-email-display");
+          const simulationCodeDisplay = document.getElementById(
+            "simulation-code-display"
+          );
+          const btnCancel = document.getElementById("btn-cancel");
+
+          // Estado local temporal
+          let currentEmail = "";
+          let generatedCode = "";
+
+          // --- PASO 1: Buscar usuario y "Enviar" código ---
+          form1.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+
+            // 1. Verificar si el usuario existe en nuestro "Backend Local" (localStorage)
+            const users = JSON.parse(localStorage.getItem("users") || "[]");
+            const userExists = users.find((u) => u.email === email);
+
+            if (!userExists) {
+              alert("No encontramos una cuenta con este correo.");
+              return;
+            }
+
+            // 2. Generar código simulado
+            currentEmail = email;
+            generatedCode = Math.floor(1000 + Math.random() * 9000).toString(); // Código aleatorio de 4 dígitos
+
+            // 3. Mostrar Vista 2
+            userEmailDisplay.textContent = currentEmail;
+            simulationCodeDisplay.textContent = generatedCode; // Mostrar el código al usuario (Simulación)
+
+            switchView(view1, view2);
+          });
+
+          // --- PASO 2: Verificar código y cambiar password ---
+          form2.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const codeInput = document.getElementById("inputCode").value;
+            const newPass = document.getElementById("newPassword").value;
+            const confirmPass =
+              document.getElementById("confirmPassword").value;
+
+            // Validaciones
+            if (codeInput !== generatedCode) {
+              alert("El código ingresado es incorrecto.");
+              return;
+            }
+            if (newPass !== confirmPass) {
+              alert("Las contraseñas no coinciden.");
+              return;
+            }
+
+            // Actualizar contraseña en localStorage
+            updatePasswordInStorage(currentEmail, newPass);
+
+            // Ir a Vista 3 (Éxito)
+            switchView(view2, view3);
+          });
+
+          // Botón Cancelar
+          btnCancel.addEventListener("click", () => {
+            switchView(view2, view1);
+            document.getElementById("form-step-2").reset();
+          });
+
+          // Función auxiliar para actualizar en "Base de Datos" (localStorage)
+          function updatePasswordInStorage(email, newPassword) {
+            let users = JSON.parse(localStorage.getItem("users") || "[]");
+            const userIndex = users.findIndex((u) => u.email === email);
+
+            if (userIndex !== -1) {
+              users[userIndex].password = newPassword; // En un backend real, esto se haría con hash
+              localStorage.setItem("users", JSON.stringify(users));
+              console.log(`Contraseña actualizada para ${email}`);
+            }
+          }
+
+          // Utilidad para cambiar vistas
+          function switchView(hideEl, showEl) {
+            hideEl.classList.remove("fade-in");
+            hideEl.classList.add("hidden");
+
+            showEl.classList.remove("hidden");
+            showEl.classList.add("fade-in");
+          }
+        </script>
+
+        <!-- Scripts globales requeridos -->
+        <script src="js/api.js"></script>
+        <script src="js/menu_logic.js"></script>
+      </body>
+    </html>
+  </body>
+</html>

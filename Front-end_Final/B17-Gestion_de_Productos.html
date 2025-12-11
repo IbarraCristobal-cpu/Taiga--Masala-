@@ -19,6 +19,7 @@
         --admin-primary-action: #007bff;
         --admin-secondary-action: #ffc107;
         --admin-success-action: #28a745;
+        --admin-danger-action: #dc3545;
         --admin-border: #dee2e6;
       }
       body {
@@ -47,17 +48,57 @@
         margin: 2em auto;
         padding: 1.5em 2em;
         overflow: hidden;
+        min-height: 500px;
+      }
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--admin-border);
+        padding-bottom: 1em;
+        margin-bottom: 1.5em;
       }
       .page-title {
         font-size: 1.5em;
-        margin: 0 0 1.5em 0;
-        padding-bottom: 0.5em;
-        border-bottom: 1px solid var(--admin-border);
-      }
-      .hidden {
-        display: none;
+        margin: 0;
       }
 
+      /* Botones Generales */
+      .btn {
+        padding: 0.6em 1.2em;
+        border: none;
+        border-radius: 5px;
+        font-weight: 500;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: opacity 0.2s;
+      }
+      .btn:hover {
+        opacity: 0.9;
+      }
+      .btn-primary {
+        background-color: var(--admin-primary-action);
+        color: white;
+      }
+      .btn-success {
+        background-color: var(--admin-success-action);
+        color: white;
+      }
+      .btn-danger {
+        background-color: var(--admin-danger-action);
+        color: white;
+      }
+      .btn-warning {
+        background-color: var(--admin-secondary-action);
+        color: #212529;
+      }
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--admin-primary-action);
+        color: var(--admin-primary-action);
+      }
+
+      /* Grid de Productos */
       .product-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -73,10 +114,15 @@
         align-items: center;
         text-align: center;
         background-color: #fdfdfd;
+        transition: transform 0.2s;
+      }
+      .product-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
       .product-card img {
-        width: 80px;
-        height: 80px;
+        width: 100%;
+        height: 120px;
         background-color: #eee;
         border-radius: 5px;
         margin-bottom: 1em;
@@ -91,80 +137,13 @@
         margin-bottom: 1em;
         font-size: 0.9em;
       }
-      .edit-btn {
-        background-color: var(--admin-secondary-action);
-        color: #212529;
-        border: none;
-        padding: 0.6em 1.5em;
-        border-radius: 20px;
-        font-weight: 500;
-        cursor: pointer;
-      }
-
-      .pagination-controls {
-        text-align: center;
-        padding: 1.5em 0 0.5em 0;
-        border-top: 1px solid var(--admin-border);
-        margin-top: 1.5em;
-      }
-      .pagination-controls button,
-      .pagination-controls span {
-        display: inline-block;
-        margin: 0 0.3em;
-        padding: 0.5em 0.8em;
-        border: 1px solid var(--admin-border);
-        background-color: white;
-        color: var(--admin-text);
-        cursor: pointer;
-        border-radius: 4px;
-        min-width: 30px;
-      }
-      .pagination-controls button:disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
-      }
-      .pagination-controls span.current-page {
-        background-color: var(--admin-header);
-        color: white;
-        border-color: var(--admin-header);
-        font-weight: 700;
-      }
-      .pagination-controls .dots {
-        border: none;
-        background: none;
-        padding: 0.5em 0.2em;
-        cursor: default;
-      }
-
-      .back-btn {
-        display: inline-block;
-        margin-bottom: 1.5em;
-        text-decoration: none;
-        color: var(--admin-primary-action);
-        font-weight: 500;
-      }
-
-      .edit-form {
+      .card-actions {
         display: flex;
-        flex-direction: column;
-        gap: 1.5em;
+        gap: 0.5em;
+        margin-top: auto;
       }
 
-      .form-row {
-        display: flex;
-        gap: 1.5em;
-        align-items: flex-start;
-      }
-
-      .form-group {
-        flex: 1;
-        margin: 0;
-      }
-
-      .form-group.full-width {
-        flex-basis: 100%;
-      }
-
+      /* Formulario de Edición/Creación */
       .edit-form label {
         font-weight: 500;
         display: block;
@@ -172,118 +151,48 @@
         font-size: 0.9em;
         color: #555;
       }
-
-      .edit-form input[type="text"],
-      .edit-form input[type="number"],
-      .edit-form textarea {
+      .edit-form input,
+      .edit-form textarea,
+      .edit-form select {
         width: 100%;
         padding: 0.8em;
         border: 1px solid var(--admin-border);
         border-radius: 5px;
         font-size: 1em;
         box-sizing: border-box;
-        font-family: inherit;
+        margin-bottom: 1em;
       }
-      .edit-form input:focus,
-      .edit-form textarea:focus {
-        border-color: var(--admin-primary-action);
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
-      }
-
-      .edit-form textarea {
-        resize: vertical;
-        min-height: 100px;
-      }
-
-      .save-btn {
-        background-color: var(--admin-success-action);
-        color: white;
-        padding: 0.8em 1.5em;
-        border: none;
-        border-radius: 5px;
-        font-size: 1em;
-        font-weight: 700;
-        cursor: pointer;
-        margin-top: 1em;
-        align-self: flex-start;
-        width: auto;
-        min-width: 120px;
-      }
-      .save-btn:hover {
-        opacity: 0.9;
-      }
-      .back-btn {
-        display: inline-block;
-        margin-bottom: 1.5em;
-        text-decoration: none;
-        color: var(--admin-primary-action);
-        font-weight: 500;
-      }
-
       .form-columns-container {
         display: flex;
         gap: 2em;
-        margin-bottom: 1.5em;
         flex-wrap: wrap;
       }
-
       .form-column {
         flex: 1;
         min-width: 250px;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5em;
       }
 
-      .form-group {
-        margin: 0;
-      }
-      .edit-form label {
-        font-weight: 500;
-        display: block;
-        margin-bottom: 0.5em;
-        font-size: 0.9em;
-        color: #555;
-      }
-      .edit-form input[type="text"],
-      .edit-form input[type="number"],
-      .edit-form textarea {
-        width: 100%;
-        padding: 0.8em;
-        border: 1px solid var(--admin-border);
-        border-radius: 5px;
-        font-size: 1em;
-        box-sizing: border-box;
-        font-family: inherit;
-      }
-      .edit-form input:focus,
-      .edit-form textarea:focus {
-        border-color: var(--admin-primary-action);
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
-      }
-      .edit-form textarea {
-        resize: vertical;
-        min-height: 100px;
+      .hidden {
+        display: none;
       }
 
-      .save-btn {
-        background-color: var(--admin-success-action);
-        color: white;
-        padding: 0.8em 1.5em;
-        border: none;
-        border-radius: 5px;
-        font-size: 1em;
-        font-weight: 700;
-        cursor: pointer;
-        margin-top: 1em;
-        align-self: flex-start;
-        width: auto;
-        min-width: 120px;
+      .loader {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid var(--admin-primary-action);
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 2em auto;
+        display: none;
       }
-      .save-btn:hover {
-        opacity: 0.9;
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
     </style>
   </head>
@@ -291,240 +200,310 @@
     <nav class="admin-navbar">
       <a href="B13_B14-Reporte_de_venta.html">Reporte</a> |
       <a href="B15-Moderacion_de_reseñas.html">Reseñas</a> |
-      <a href="B16-Carga_de_Producto.html">Carga Producto</a> |
-      <a href="B17-Gestion_de_Productos.html">Gestionar Produccto</a>
+      <a href="B17-Gestion_de_Productos.html">Gestionar Productos</a>
+      <a href="B07-Home.html" style="float: right">Volver al Sitio</a>
     </nav>
 
     <div class="admin-main-content">
+      <!-- VISTA: LISTA DE PRODUCTOS -->
       <div id="product-list-view">
-        <h2 class="page-title">Editar productos</h2>
+        <div class="page-header">
+          <h2 class="page-title">Gestión de Productos</h2>
+          <div style="display: flex; gap: 10px">
+            <button id="btn-create-new" class="btn btn-primary">
+              + Nuevo Producto
+            </button>
+            <button id="btn-clean-carts" class="btn btn-outline">
+              🧹 Limpiar Carritos
+            </button>
+          </div>
+        </div>
+
+        <div id="loader" class="loader"></div>
         <div id="product-grid" class="product-grid"></div>
-        <div id="pagination-controls" class="pagination-controls"></div>
       </div>
 
+      <!-- VISTA: FORMULARIO (Crear/Editar) -->
       <div id="product-edit-view" class="hidden">
-        <a href="#" id="back-to-list-btn" class="back-btn"
-          >&larr; Volver a los productos</a
+        <button
+          id="back-to-list-btn"
+          class="btn btn-outline"
+          style="margin-bottom: 1em"
         >
-        <h2 class="page-title">Editar Producto</h2>
-        <form id="edit-form">
+          &larr; Volver
+        </button>
+        <h2 class="page-title" id="form-title">Editar Producto</h2>
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 1em 0" />
+
+        <form id="edit-form" class="edit-form">
+          <input type="hidden" id="edit-id" />
+          <!-- ID oculto para saber si editamos -->
+
           <div class="form-columns-container">
             <div class="form-column">
-              <div class="form-group">
-                <label for="edit-name">Nombre del Plato</label>
-                <input type="text" id="edit-name" />
-              </div>
-              <div class="form-group">
-                <label for="edit-desc">Descripción del Plato</label>
-                <textarea id="edit-desc" rows="5"></textarea>
-              </div>
+              <label for="edit-name">Nombre del Plato</label>
+              <input
+                type="text"
+                id="edit-name"
+                required
+                placeholder="Ej: Pollo Tikka Masala"
+              />
+
+              <label for="edit-desc">Descripción</label>
+              <textarea
+                id="edit-desc"
+                rows="5"
+                placeholder="Ingredientes y detalles..."
+              ></textarea>
+
+              <label for="edit-category">Categoría</label>
+              <select id="edit-category">
+                <option value="Entradas">Entradas</option>
+                <option value="Platos Principales">Platos Principales</option>
+                <option value="Postres">Postres</option>
+                <option value="Jugos">Jugos</option>
+              </select>
             </div>
 
             <div class="form-column">
-              <div class="form-group">
-                <label for="edit-price">Precio</label>
-                <input type="number" id="edit-price" min="0" step="any" />
-              </div>
-              <div class="form-group">
-                <label for="edit-stock">Cantidad de stock</label>
-                <input type="number" id="edit-stock" min="0" step="1" />
+              <label for="edit-price">Precio ($)</label>
+              <input type="number" id="edit-price" min="0" required />
+
+              <label for="edit-stock">Stock (Unidades)</label>
+              <input type="number" id="edit-stock" min="0" required />
+
+              <label for="edit-image">URL de Imagen</label>
+              <input
+                type="text"
+                id="edit-image"
+                placeholder="images/Entradas/1.jpg"
+              />
+
+              <!-- Previsualización simple -->
+              <div style="margin-top: 1em; text-align: center">
+                <img
+                  id="image-preview"
+                  src=""
+                  style="max-height: 100px; display: none; border-radius: 5px"
+                />
               </div>
             </div>
           </div>
-          <button type="submit" class="save-btn">Guardar cambios</button>
+
+          <div style="margin-top: 2em; text-align: right">
+            <button
+              type="submit"
+              class="btn btn-success"
+              style="padding: 0.8em 2em; font-size: 1em"
+            >
+              Guardar Cambios
+            </button>
+          </div>
         </form>
       </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="api.js"></script>
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        let products = [
-          {
-            id: 1,
-            name: "Plato C",
-            stock: 25,
-            price: 8500,
-            description: "Descripción C.",
-          },
-          {
-            id: 2,
-            name: "Samosas",
-            stock: 17,
-            price: 5990,
-            description: "Empanadas fritas...",
-          },
-          {
-            id: 3,
-            name: "Plato P",
-            stock: 0,
-            price: 12000,
-            description: "Descripción P.",
-          },
-          {
-            id: 4,
-            name: "Plato T",
-            stock: 40,
-            price: 7500,
-            description: "Descripción T.",
-          },
-          {
-            id: 5,
-            name: "Plato E",
-            stock: 15,
-            price: 9500,
-            description: "Descripción E.",
-          },
-        ];
-        let currentlyEditingId = null;
-        const itemsPerPage = 4;
-        let currentPage = 1;
-
-        const productListView = document.getElementById("product-list-view");
-        const productEditView = document.getElementById("product-edit-view");
+      document.addEventListener("DOMContentLoaded", async () => {
+        // --- REFERENCIAS DOM ---
+        const listView = document.getElementById("product-list-view");
+        const editView = document.getElementById("product-edit-view");
         const productGrid = document.getElementById("product-grid");
-        const editForm = document.getElementById("edit-form");
-        const backToListBtn = document.getElementById("back-to-list-btn");
-        const paginationControlsContainer = document.getElementById(
-          "pagination-controls"
-        );
+        const loader = document.getElementById("loader");
 
-        const showListView = () => {
-          productListView.classList.remove("hidden");
-          productEditView.classList.add("hidden");
-        };
-        const showEditView = () => {
-          productListView.classList.add("hidden");
-          productEditView.classList.remove("hidden");
-        };
-        const renderProductList = () => {
+        // Botones
+        const btnCreateNew = document.getElementById("btn-create-new");
+        const btnCleanCarts = document.getElementById("btn-clean-carts");
+        const btnBack = document.getElementById("back-to-list-btn");
+
+        // Formulario
+        const form = document.getElementById("edit-form");
+        const formTitle = document.getElementById("form-title");
+        const inpId = document.getElementById("edit-id");
+        const inpName = document.getElementById("edit-name");
+        const inpDesc = document.getElementById("edit-desc");
+        const inpPrice = document.getElementById("edit-price");
+        const inpStock = document.getElementById("edit-stock");
+        const inpCategory = document.getElementById("edit-category");
+        const inpImage = document.getElementById("edit-image");
+        const imgPreview = document.getElementById("image-preview");
+
+        // --- INICIALIZAR ---
+        await loadProducts();
+
+        // --- FUNCIONES LÓGICAS ---
+
+        // 1. Cargar Productos desde API
+        async function loadProducts() {
+          loader.style.display = "block";
           productGrid.innerHTML = "";
-          const totalProducts = products.length;
-          if (totalProducts === 0) {
-            productGrid.innerHTML = "<p>No hay productos.</p>";
-            renderPagination(0);
+          try {
+            const products = await API.getProducts();
+            renderGrid(products);
+          } catch (error) {
+            alert("Error cargando productos: " + error.message);
+          } finally {
+            loader.style.display = "none";
+          }
+        }
+
+        // 2. Renderizar Grid
+        function renderGrid(products) {
+          if (products.length === 0) {
+            productGrid.innerHTML = "<p>No hay productos registrados.</p>";
             return;
           }
-          const startIndex = (currentPage - 1) * itemsPerPage;
-          const endIndex = startIndex + itemsPerPage;
-          const productsToShow = products.slice(startIndex, endIndex);
-          productsToShow.forEach((product) => {
-            const card = document.createElement("div");
-            card.className = "product-card";
-            card.innerHTML = `<img src="" alt="Img ${product.name}"><h4>${
-              product.name
-            }</h4><p class="stock">${
-              product.stock > 0 ? product.stock + " en stock" : "Agotado"
-            }</p><button class="edit-btn" data-id="${
-              product.id
-            }">Editar</button>`;
-            productGrid.appendChild(card);
-          });
-          renderPagination(totalProducts);
-        };
-        const renderPagination = (totalItems) => {
-          paginationControlsContainer.innerHTML = "";
-          const totalPages = Math.ceil(totalItems / itemsPerPage);
-          if (totalPages <= 1) return;
-          const prevButton = document.createElement("button");
-          prevButton.innerHTML = "&lt;";
-          prevButton.disabled = currentPage === 1;
-          prevButton.addEventListener("click", () =>
-            changePage(currentPage - 1)
-          );
-          paginationControlsContainer.appendChild(prevButton);
-          const maxPagesToShow = 5;
-          let startPage = Math.max(
-            1,
-            currentPage - Math.floor(maxPagesToShow / 2)
-          );
-          let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-          if (endPage - startPage + 1 < maxPagesToShow)
-            startPage = Math.max(1, endPage - maxPagesToShow + 1);
-          if (startPage > 1) {
-            const btn1 = document.createElement("button");
-            btn1.textContent = "1";
-            btn1.addEventListener("click", () => changePage(1));
-            paginationControlsContainer.appendChild(btn1);
-            if (startPage > 2) {
-              const dots = document.createElement("span");
-              dots.className = "dots";
-              dots.textContent = "...";
-              paginationControlsContainer.appendChild(dots);
+
+          productGrid.innerHTML = products
+            .map(
+              (p) => `
+                <div class="product-card">
+                    <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/150?text=Sin+Imagen'">
+                    <h4>${p.name}</h4>
+                    <p style="color:#666; font-size:0.85em; margin-bottom:0.5em;">${p.category}</p>
+                    <p class="stock">Stock: <b>${p.stock}</b> | $${p.price}</p>
+                    <div class="card-actions">
+                        <button class="btn btn-warning" onclick="startEdit(${p.id})">✏️ Editar</button>
+                        <button class="btn btn-danger" onclick="deleteProd(${p.id})">🗑️ Borrar</button>
+                    </div>
+                </div>
+            `
+            )
+            .join("");
+        }
+
+        // 3. Abrir Formulario (Crear o Editar)
+        function showForm(isEdit) {
+          listView.classList.add("hidden");
+          editView.classList.remove("hidden");
+          formTitle.textContent = isEdit ? "Editar Producto" : "Nuevo Producto";
+
+          // Actualizar vista previa de imagen al cambiar URL
+          inpImage.oninput = () => {
+            if (inpImage.value) {
+              imgPreview.src = inpImage.value;
+              imgPreview.style.display = "block";
+            } else {
+              imgPreview.style.display = "none";
             }
-          }
-          for (let i = startPage; i <= endPage; i++) {
-            const pageBtn = document.createElement(
-              i === currentPage ? "span" : "button"
-            );
-            pageBtn.textContent = i;
-            if (i === currentPage) pageBtn.className = "current-page";
-            else pageBtn.addEventListener("click", () => changePage(i));
-            paginationControlsContainer.appendChild(pageBtn);
-          }
-          if (endPage < totalPages) {
-            if (endPage < totalPages - 1) {
-              const dots = document.createElement("span");
-              dots.className = "dots";
-              dots.textContent = "...";
-              paginationControlsContainer.appendChild(dots);
+          };
+        }
+
+        // --- EVENTOS GLOBALES (Botones en tarjetas) ---
+        window.startEdit = async (id) => {
+          try {
+            const product = await API.getProductById(id);
+            if (!product) return;
+
+            // Rellenar form
+            inpId.value = product.id;
+            inpName.value = product.name;
+            inpDesc.value = product.description;
+            inpPrice.value = product.price;
+            inpStock.value = product.stock;
+            inpCategory.value = product.category;
+            inpImage.value = product.image;
+
+            if (product.image) {
+              imgPreview.src = product.image;
+              imgPreview.style.display = "block";
+            } else {
+              imgPreview.style.display = "none";
             }
-            const btnLast = document.createElement("button");
-            btnLast.textContent = totalPages;
-            btnLast.addEventListener("click", () => changePage(totalPages));
-            paginationControlsContainer.appendChild(btnLast);
+
+            showForm(true); // Modo Edición
+          } catch (e) {
+            alert(e.message);
           }
-          const nextButton = document.createElement("button");
-          nextButton.innerHTML = "&gt;";
-          nextButton.disabled = currentPage === totalPages;
-          nextButton.addEventListener("click", () =>
-            changePage(currentPage + 1)
-          );
-          paginationControlsContainer.appendChild(nextButton);
-        };
-        const changePage = (newPage) => {
-          currentPage = newPage;
-          renderProductList();
-        };
-        const populateEditForm = (productId) => {
-          const product = products.find((p) => p.id === productId);
-          if (!product) return;
-          currentlyEditingId = productId;
-          document.getElementById("edit-name").value = product.name;
-          document.getElementById("edit-desc").value = product.description;
-          document.getElementById("edit-price").value = product.price;
-          document.getElementById("edit-stock").value = product.stock;
         };
 
-        productGrid.addEventListener("click", (event) => {
-          if (event.target.classList.contains("edit-btn")) {
-            const pid = parseInt(event.target.dataset.id);
-            populateEditForm(pid);
-            showEditView();
+        window.deleteProd = async (id) => {
+          if (
+            confirm(
+              "¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer."
+            )
+          ) {
+            try {
+              await API.deleteProduct(id);
+              await loadProducts(); // Recargar lista
+            } catch (e) {
+              alert("Error: " + e.message);
+            }
           }
-        });
-        backToListBtn.addEventListener("click", (event) => {
-          event.preventDefault();
-          showListView();
-        });
-        editForm.addEventListener("submit", (event) => {
-          event.preventDefault();
-          const idx = products.findIndex((p) => p.id === currentlyEditingId);
-          if (idx === -1) return;
-          products[idx].name = document.getElementById("edit-name").value;
-          products[idx].description =
-            document.getElementById("edit-desc").value;
-          products[idx].price = parseInt(
-            document.getElementById("edit-price").value
-          );
-          products[idx].stock = parseInt(
-            document.getElementById("edit-stock").value
-          );
-          alert("¡Producto actualizado!");
-          renderProductList();
-          showListView();
+        };
+
+        // --- EVENTOS INTERFAZ ---
+
+        // Botón Nuevo
+        btnCreateNew.addEventListener("click", () => {
+          form.reset();
+          inpId.value = ""; // ID vacío significa Crear
+          imgPreview.style.display = "none";
+          showForm(false); // Modo Crear
         });
 
-        renderProductList();
+        // Botón Volver
+        btnBack.addEventListener("click", (e) => {
+          e.preventDefault();
+          editView.classList.add("hidden");
+          listView.classList.remove("hidden");
+        });
+
+        // Submit Formulario
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const data = {
+            name: inpName.value,
+            description: inpDesc.value,
+            price: Number(inpPrice.value),
+            stock: Number(inpStock.value),
+            category: inpCategory.value,
+            image: inpImage.value || "images/default.jpg",
+          };
+
+          const id = inpId.value;
+          const btnSubmit = form.querySelector("button[type='submit']");
+          const originalText = btnSubmit.textContent;
+          btnSubmit.disabled = true;
+          btnSubmit.textContent = "Guardando...";
+
+          try {
+            if (id) {
+              // Editar
+              await API.updateProduct(id, data);
+              alert("Producto actualizado correctamente.");
+            } else {
+              // Crear
+              await API.createProduct(data);
+              alert("Producto creado exitosamente.");
+            }
+
+            // Volver a la lista
+            editView.classList.add("hidden");
+            listView.classList.remove("hidden");
+            await loadProducts();
+          } catch (err) {
+            alert("Error al guardar: " + err.message);
+          } finally {
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = originalText;
+          }
+        });
+
+        // Botón Clean Abandoned Carts
+        btnCleanCarts.addEventListener("click", async () => {
+          if (
+            confirm(
+              "¿Deseas limpiar todos los carritos abandonados (localStorage)?"
+            )
+          ) {
+            const res = await API.cleanAbandonedCarts();
+            alert(res.message);
+          }
+        });
       });
     </script>
   </body>

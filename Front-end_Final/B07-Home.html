@@ -33,6 +33,7 @@
         line-height: 1.6;
       }
 
+      /* Navbar Styles */
       .navbar {
         background-color: var(--color-surface);
         padding: 0.5rem 1rem;
@@ -82,39 +83,17 @@
         color: var(--color-primario);
       }
 
-      .section {
-        padding: 4rem 1rem;
-        max-width: 960px;
-        margin: auto;
-        text-align: center;
+      /* Estilos específicos para botones de estado (ocultos por defecto) */
+      #nav-btn-admin,
+      #nav-btn-logout,
+      #nav-btn-profile {
+        display: none; /* Se activan vía JS */
       }
-      .section-title {
-        font-family: var(--fuente-titulos);
-        font-size: 2.5rem;
-        color: var(--color-secundario);
-        margin-bottom: 0.5rem;
-      }
-      .section-subtitle {
-        font-size: 1.1rem;
-        color: var(--color-texto-secundario);
-        max-width: 600px;
-        margin: 0 auto 2rem auto;
+      #nav-btn-admin {
+        color: #d32f2f;
       }
 
-      /* La Carta */
-      #menu {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-          url("images/Cordero/1.png") no-repeat center center;
-        background-size: cover;
-        color: white;
-        border-radius: 15px;
-        max-width: 960px;
-        margin: 4rem auto;
-      }
-      #menu .section-subtitle {
-        color: #f0f0f0;
-      }
-
+      /* Hero & Sections */
       .hero {
         background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
           url("images/Home/bienvenida.webp") no-repeat center center;
@@ -146,6 +125,38 @@
       }
       .cta-button:hover {
         transform: scale(1.05);
+      }
+
+      .section {
+        padding: 4rem 1rem;
+        max-width: 960px;
+        margin: auto;
+        text-align: center;
+      }
+      .section-title {
+        font-family: var(--fuente-titulos);
+        font-size: 2.5rem;
+        color: var(--color-secundario);
+        margin-bottom: 0.5rem;
+      }
+      .section-subtitle {
+        font-size: 1.1rem;
+        color: var(--color-texto-secundario);
+        max-width: 600px;
+        margin: 0 auto 2rem auto;
+      }
+
+      #menu {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+          url("images/Cordero/1.png") no-repeat center center;
+        background-size: cover;
+        color: white;
+        border-radius: 15px;
+        max-width: 960px;
+        margin: 4rem auto;
+      }
+      #menu .section-subtitle {
+        color: #f0f0f0;
       }
 
       #about .about-content {
@@ -181,6 +192,7 @@
         padding: 2rem 1rem;
       }
 
+      /* Estilos del Modal */
       .modal-overlay {
         position: fixed;
         top: 0;
@@ -192,14 +204,18 @@
         justify-content: center;
         align-items: center;
         z-index: 1000;
-        opacity: 1;
-        visibility: visible;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-      }
-      .modal-overlay.hidden {
         opacity: 0;
         visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
       }
+      .modal-overlay:not(.hidden) {
+        opacity: 1;
+        visibility: visible;
+      }
+      .hidden {
+        display: none !important;
+      }
+
       .modal-card {
         background-color: var(--color-fondo-modal);
         border-radius: 10px;
@@ -229,11 +245,7 @@
         color: var(--color-secundario);
         font-weight: 600;
         font-size: 2em;
-        margin-bottom: 1.5em;
-      }
-      .modal-card .card-subtitle {
-        color: #6c757d;
-        margin-bottom: 1.5em;
+        margin-bottom: 1em;
       }
       .modal-card .form-floating {
         position: relative;
@@ -249,35 +261,6 @@
         background-color: #fff;
         box-sizing: border-box;
       }
-      .modal-card .form-control:focus {
-        outline: none;
-        border-color: var(--color-primario);
-      }
-      .modal-card .form-floating label {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        color: #aaa;
-        pointer-events: none;
-        transition: all 0.2s ease-in-out;
-      }
-      .modal-card .form-control:focus + label,
-      .modal-card .form-control:not(:placeholder-shown) + label {
-        top: -0.75rem;
-        left: 0.75rem;
-        font-size: 0.8rem;
-        background-color: var(--color-fondo-modal);
-        padding: 0 0.25rem;
-        color: var(--color-secundario);
-      }
-      .modal-card .form-text {
-        font-size: 0.8em;
-        color: #6c757d;
-        text-align: left;
-        margin-top: -1rem;
-        margin-bottom: 1.5rem;
-        display: block;
-      }
       .modal-card .btn-primary {
         background-color: var(--color-secundario);
         border: none;
@@ -288,84 +271,51 @@
         color: white;
         width: 100%;
         cursor: pointer;
-        margin-bottom: 1.5em;
+        margin-bottom: 1em;
+        transition: background-color 0.3s;
       }
       .modal-card .btn-primary:hover {
         background-color: #6a350f;
       }
-      .modal-card .bottom-link,
-      .modal-card .register-link,
-      .modal-card .login-link {
-        margin-top: 1.5em;
-        font-size: 0.9em;
-      }
-      .modal-card .bottom-link a,
-      .modal-card .register-link a,
-      .modal-card .login-link a {
+      .modal-card .register-link a {
         color: var(--color-secundario);
         font-weight: 600;
         text-decoration: none;
-        cursor: pointer;
-      }
-      .modal-card .bottom-link a:hover,
-      .modal-card .register-link a:hover,
-      .modal-card .login-link a:hover {
-        text-decoration: underline;
-      }
-      .modal-card .forgot-password {
-        display: block;
-        text-align: right;
-        font-size: 0.9em;
-        margin-bottom: 1.5rem;
-        color: var(--color-secundario);
-        text-decoration: none;
-        cursor: pointer;
-      }
-      .modal-card .role-selection {
-        display: flex;
-        justify-content: space-around;
-        gap: 1em;
-        margin-bottom: 1.5em;
-      }
-      .modal-card .btn-role {
-        flex: 1;
-        background-color: transparent;
-        border: 2px solid var(--color-secundario);
-        color: var(--color-secundario);
-        padding: 0.6em;
-        font-size: 0.9em;
-        font-weight: 600;
-        border-radius: 20px;
-        cursor: pointer;
-      }
-      .modal-card .btn-role:hover {
-        background-color: var(--color-secundario);
-        color: white;
-      }
-      .modal-card .hidden-view {
-        display: none;
       }
 
-      .modal-card #email-request-view .btn-primary,
-      .modal-card #password-reset-view .btn-primary,
-      .modal-card #success-view .btn-primary,
-      .modal-card #expired-link-view .btn-primary {
-        background-color: var(--color-accion-modal);
+      /* Estilos específicos para Recuperación */
+      .alert-simulation {
+        background-color: #e3f2fd;
+        border: 1px solid #2196f3;
+        color: #0d47a1;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        font-size: 0.9em;
+        text-align: left;
       }
-      .modal-card #email-request-view .btn-primary:hover,
-      .modal-card #password-reset-view .btn-primary:hover,
-      .modal-card #success-view .btn-primary:hover,
-      .modal-card #expired-link-view .btn-primary:hover {
-        background-color: #0056b3;
+      .fade-in {
+        animation: fadeIn 0.4s forwards;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
     </style>
   </head>
   <body>
+    <!-- BARRA DE NAVEGACIÓN -->
     <nav class="navbar">
       <div class="navbar-container">
         <a class="navbar-brand" href="#">
           <img src="images/Logo/flor.jpg" alt="Logo Masala" />
-          Masala
+          Malasa
         </a>
         <ul class="navbar-nav">
           <li><a class="nav-link active" href="B07-Home.html">Home</a></li>
@@ -375,9 +325,28 @@
               >Contacto</a
             >
           </li>
+
+          <!-- Botones Controlados por menu_logic.js -->
           <li>
-            <a class="nav-link" id="login-nav-link" href="#">Iniciar Sesión</a>
+            <a class="nav-link" id="nav-btn-login" href="#">Iniciar Sesión</a>
           </li>
+          <li>
+            <a
+              class="nav-link"
+              id="nav-btn-profile"
+              href="B08_B09-Perfil_de_usuario.html"
+              >Mi Perfil</a
+            >
+          </li>
+          <li>
+            <a
+              class="nav-link"
+              id="nav-btn-admin"
+              href="B17-Gestion_de_Productos.html"
+              >Panel Admin</a
+            >
+          </li>
+          <li><a class="nav-link" id="nav-btn-logout" href="#">Salir</a></li>
         </ul>
       </div>
     </nav>
@@ -392,9 +361,14 @@
     </header>
 
     <main>
+      <!-- ========================================= -->
+      <!-- MODAL DE LOGIN -->
+      <!-- ========================================= -->
       <div id="login-modal" class="modal-overlay hidden">
         <div class="modal-card">
-          <button class="close-modal-btn">&times;</button>
+          <button class="close-modal-btn" data-target="login-modal">
+            &times;
+          </button>
           <h3 class="card-title">Iniciar Sesión</h3>
           <form id="login-form">
             <div class="form-floating">
@@ -403,8 +377,8 @@
                 class="form-control"
                 id="emailLogin"
                 required
+                placeholder="name@example.com"
               />
-              <label for="emailLogin">Correo Electrónico</label>
             </div>
             <div class="form-floating">
               <input
@@ -412,139 +386,176 @@
                 class="form-control"
                 id="passLogin"
                 required
+                placeholder="Contraseña"
               />
-              <label for="passLogin">Contraseña</label>
             </div>
-            <a href="#" id="forgot-password-link" class="forgot-password"
-              >¿Olvidaste tu contraseña?</a
+
+            <a
+              href="#"
+              id="link-forgot-password"
+              style="
+                display: block;
+                text-align: right;
+                margin-bottom: 1em;
+                text-decoration: none;
+                color: #8b4513;
+              "
             >
+              ¿Olvidaste tu contraseña?
+            </a>
+
             <button class="btn-primary" type="submit">Ingresar</button>
           </form>
-          <div class="role-selection">
-            <button
-              class="btn-role"
-              type="button"
-              onclick="handleRoleLogin('cliente')"
-            >
-              Entrar como Cliente
-            </button>
-            <button
-              class="btn-role"
-              type="button"
-              onclick="handleRoleLogin('admin')"
-            >
-              Entrar como Administrador
-            </button>
-          </div>
+
           <div class="register-link">
             <small
               >¿No tienes una cuenta?
-              <a href="#" id="go-to-register-link">Regístrate Aquí</a></small
+              <a href="#" id="link-open-register">Regístrate Aquí</a></small
             >
           </div>
         </div>
       </div>
 
+      <!-- ========================================= -->
+      <!-- MODAL DE REGISTRO (INCLUIDO EN HOME) -->
+      <!-- ========================================= -->
       <div id="register-modal" class="modal-overlay hidden">
         <div class="modal-card">
-          <button class="close-modal-btn">&times;</button>
-          <h3 class="card-title">Crea tu Cuenta</h3>
-          <form>
+          <button class="close-modal-btn" data-target="register-modal">
+            &times;
+          </button>
+          <h3 class="card-title">Crear Cuenta</h3>
+          <form id="register-form-home">
             <div class="form-floating">
               <input
                 type="email"
                 class="form-control"
-                id="emailRegister"
+                id="emailRegisterHome"
+                placeholder="name@example.com"
                 required
               />
-              <label for="emailRegister">Usuario</label>
             </div>
             <div class="form-floating">
               <input
                 type="password"
                 class="form-control"
-                id="passRegister"
+                id="passRegisterHome"
+                placeholder="Contraseña"
                 required
+                minlength="8"
               />
-              <label for="passRegister">Contraseña</label>
             </div>
-            <small class="form-text">Mínimo 8 caracteres y 1 mayúscula.</small>
             <button class="btn-primary" type="submit">Registrarse</button>
           </form>
-          <div class="login-link">
-            <small
-              >¿Ya tienes una cuenta?
-              <a href="#" id="go-to-login-link">Inicia Sesión</a></small
+        </div>
+      </div>
+
+      <!-- ========================================= -->
+      <!-- MODAL DE RECUPERACIÓN -->
+      <!-- ========================================= -->
+      <div id="recovery-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+          <button class="close-modal-btn" data-target="recovery-modal">
+            &times;
+          </button>
+
+          <!-- VISTA 1: BUSCAR CUENTA -->
+          <div id="rec-step-1" class="fade-in">
+            <h3 class="card-title">Recuperar Acceso</h3>
+            <p style="margin-bottom: 1.5em; color: #666">
+              Ingresa tu correo para buscar tu cuenta.
+            </p>
+            <form id="rec-form-step-1">
+              <input
+                type="email"
+                class="form-control"
+                id="rec-email"
+                placeholder="tu@correo.com"
+                required
+                style="margin-bottom: 1em"
+              />
+              <button class="btn-primary" type="submit">Buscar Cuenta</button>
+            </form>
+            <button
+              class="btn-back-login"
+              style="
+                background: none;
+                border: none;
+                color: #8b4513;
+                text-decoration: underline;
+                cursor: pointer;
+              "
             >
+              Volver a Iniciar Sesión
+            </button>
+          </div>
+
+          <!-- VISTA 2: TOKEN DEL CORREO -->
+          <div id="rec-step-2" class="hidden">
+            <h3 class="card-title">Restablecer</h3>
+            <p style="font-size: 0.9em; margin-bottom: 1.5em; color: #666">
+              Hemos enviado un token a <b id="rec-display-email"></b>.<br />
+              Cópialo del correo y pégalo aquí.
+            </p>
+            <form id="rec-form-step-2">
+              <input
+                type="text"
+                class="form-control"
+                id="rec-input-code"
+                placeholder="Token del correo (copiar y pegar)"
+                required
+                style="margin-bottom: 1em"
+              />
+              <input
+                type="password"
+                class="form-control"
+                id="rec-new-pass"
+                placeholder="Nueva Contraseña"
+                required
+                minlength="6"
+                style="margin-bottom: 1em"
+              />
+              <input
+                type="password"
+                class="form-control"
+                id="rec-confirm-pass"
+                placeholder="Confirmar Contraseña"
+                required
+                style="margin-bottom: 1em"
+              />
+              <button class="btn-primary" type="submit">
+                Cambiar Contraseña
+              </button>
+            </form>
+            <button
+              class="btn-cancel-rec"
+              style="
+                background: none;
+                border: none;
+                color: #888;
+                cursor: pointer;
+                text-decoration: underline;
+              "
+            >
+              Cancelar
+            </button>
+          </div>
+
+          <!-- VISTA 3: ÉXITO -->
+          <div id="rec-step-3" class="hidden">
+            <div style="color: #4caf50; font-size: 4em; margin-bottom: 0.2em">
+              ✓
+            </div>
+            <h3 class="card-title">¡Listo!</h3>
+            <p>Tu contraseña ha sido actualizada correctamente.</p>
+            <button class="btn-primary btn-back-login" style="margin-top: 1em">
+              Iniciar Sesión Ahora
+            </button>
           </div>
         </div>
       </div>
 
-      <div id="recovery-modal" class="modal-overlay hidden">
-        <div class="modal-card">
-          <button class="close-modal-btn">&times;</button>
-          <div id="email-request-view">
-            <h3 class="card-title">Recuperar Contraseña</h3>
-            <p class="card-subtitle">Ingresa tu correo...</p>
-            <form id="email-request-form">
-              <div class="form-floating">
-                <input
-                  type="email"
-                  class="form-control"
-                  id="emailRecovery"
-                  required
-                />
-                <label for="emailRecovery">Correo Electrónico</label>
-              </div>
-              <button class="btn-primary" type="submit">Enviar Enlace</button>
-            </form>
-            <div class="bottom-link">
-              <a href="#" id="recovery-back-to-login"
-                >Volver a Inicio de Sesión</a
-              >
-            </div>
-          </div>
-          <div id="password-reset-view" class="hidden-view">
-            <h3 class="card-title">Crear nueva contraseña</h3>
-            <p class="card-subtitle">Define una nueva contraseña.</p>
-            <form id="password-reset-form">
-              <div class="form-floating">
-                <input
-                  type="password"
-                  class="form-control"
-                  id="new-password"
-                  required
-                />
-                <label for="new-password">Contraseña nueva</label>
-              </div>
-              <div class="form-floating">
-                <input
-                  type="password"
-                  class="form-control"
-                  id="confirm-password"
-                  required
-                />
-                <label for="confirm-password">Confirmar Contraseña</label>
-              </div>
-              <button class="btn-primary" type="submit">
-                Actualizar Contraseña
-              </button>
-            </form>
-          </div>
-          <div id="success-view" class="hidden-view">
-            <h3 class="card-title">Contraseña actualizada</h3>
-            <p class="card-subtitle">Tu contraseña ha sido actualizada.</p>
-            <button id="go-to-login-btn" class="btn-primary">
-              Ir a inicio de sesión
-            </button>
-          </div>
-          <div id="expired-link-view" class="hidden-view">
-            <h3 class="card-title">Enlace caducado</h3>
-            <p class="card-subtitle">Tu enlace ha caducado...</p>
-            <button id="expired-ok-btn" class="btn-primary">OK</button>
-          </div>
-        </div>
-      </div>
+      <!-- SECCIONES DE CONTENIDO -->
       <section id="about" class="section">
         <h2 class="section-title">Nuestra Historia</h2>
         <p class="section-subtitle">
@@ -561,13 +572,7 @@
               En Malasa, cada plato cuenta una historia. Fundado en el corazón
               de la ciudad, nuestro restaurante nació del sueño de traer los
               sabores más auténticos de la India a tu mesa. Utilizamos recetas
-              familiares transmitidas de generación en generación, seleccionando
-              solo las especias más frescas y los ingredientes de la más alta
-              calidad.
-            </p>
-            <p>
-              Creemos que la comida es una celebración. Te invitamos a unirte a
-              nosotros y descubrir la riqueza de nuestra herencia culinaria.
+              familiares transmitidas de generación en generación.
             </p>
           </div>
         </div>
@@ -597,11 +602,13 @@
             <p>Lunes a Sábado: 12:00 - 23:00<br />Domingo: 12:00 - 18:00</p>
           </div>
           <iframe
-            class="google-map"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.418751512411!2d-70.6111111848009!3d-33.43840598077757!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c58a679907c7%3A0x6b3f4a4a4f8d2b9!2sAv.%20Providencia%201234%2C%20Providencia%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses-419!2scl!4v1678886000000!5m2!1ses-419!2scl"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d208.11126891192535!2d-70.61812593198744!3d-33.42897168680443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662cf6324c99b71%3A0x5aecd80ceb5fb260!2sAv.%20Nueva%20Providencia%201411!5e0!3m2!1ses!2scl!4v1765150309369!5m2!1ses!2scl"
+            width="600"
+            height="250"
+            style="border: 0"
             allowfullscreen=""
             loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
+            class="google-map"
           ></iframe>
         </div>
       </section>
@@ -609,8 +616,8 @@
       <section id="contact" class="section">
         <h2 class="section-title">Contáctanos</h2>
         <p class="section-subtitle">
-          ¿Tienes alguna pregunta o quieres hacer una reserva? Estamos aquí para
-          ayudarte.
+          ¿Tienes alguna pregunta, quieres hacer una reserva o alguna critica a
+          algun plato? Estamos aquí para ayudarte.
         </p>
         <a href="B06-Formulario_de_Contacto.html" class="cta-button"
           >Enviar un Mensaje</a
@@ -621,135 +628,295 @@
     <footer class="footer">
       <p>© 2024 Restaurante Malasa. Todos los derechos reservados.</p>
     </footer>
-    <div id="login-modal" class="modal-overlay hidden">
-      ... (Contenido del modal de login como en la respuesta anterior) ...
-    </div>
-    <div id="register-modal" class="modal-overlay hidden">
-      ... (Contenido del modal de registro como en la respuesta anterior) ...
-    </div>
-    <div id="recovery-modal" class="modal-overlay hidden">
-      ... (Contenido del modal de recuperación como en la respuesta anterior)
-      ...
-    </div>
+
+    <!-- IMPORTAR SCRIPTS (Orden Importante: API -> Menu Logic -> Script Local) -->
+    <script src="api.js"></script>
+    <script src="menu_logic.js"></script>
+
     <script>
       document.addEventListener("DOMContentLoaded", () => {
+        // === REFERENCIAS DOM ===
         const loginModal = document.getElementById("login-modal");
-        const registerModal = document.getElementById("register-modal");
         const recoveryModal = document.getElementById("recovery-modal");
-        const loginNavLink = document.getElementById("login-nav-link");
-        const goToRegisterLink = document.getElementById("go-to-register-link");
-        const goToLoginLinkRegister =
-          registerModal.querySelector("#go-to-login-link"); // ID único si es necesario
-        const forgotPasswordLink = document.getElementById(
-          "forgot-password-link"
-        );
-        const recoveryBackToLogin = document.getElementById(
-          "recovery-back-to-login"
-        );
+
+        const loginBtn = document.getElementById("nav-btn-login");
+        const forgotPassBtn = document.getElementById("link-forgot-password");
+        const backToLoginBtns = document.querySelectorAll(".btn-back-login");
+        const cancelRecBtn = document.querySelector(".btn-cancel-rec");
         const closeButtons = document.querySelectorAll(".close-modal-btn");
 
-        const openModal = (modalElement) => {
-          modalElement.classList.remove("hidden");
-        };
-        const closeModal = () => {
+        // === FUNCIONES MODALES ===
+        const openModal = (modal) => modal.classList.remove("hidden");
+        const closeModal = (modal) => modal.classList.add("hidden");
+        const closeAllModals = () => {
           loginModal.classList.add("hidden");
-          registerModal.classList.add("hidden");
           recoveryModal.classList.add("hidden");
-          showRecoveryView(recoveryEmailRequestView);
         };
 
-        loginNavLink.addEventListener("click", (e) => {
-          e.preventDefault();
-          openModal(loginModal);
-        });
-        goToRegisterLink.addEventListener("click", (e) => {
-          e.preventDefault();
-          closeModal();
-          openModal(registerModal);
-        });
-        if (goToLoginLinkRegister)
-          goToLoginLinkRegister.addEventListener("click", (e) => {
+        // --- Event Listeners UI ---
+        if (loginBtn) {
+          loginBtn.addEventListener("click", (e) => {
             e.preventDefault();
-            closeModal();
+            closeAllModals();
             openModal(loginModal);
           });
-        forgotPasswordLink.addEventListener("click", (e) => {
-          e.preventDefault();
-          closeModal();
-          openModal(recoveryModal);
-        });
-        recoveryBackToLogin.addEventListener("click", (e) => {
-          e.preventDefault();
-          closeModal();
-          openModal(loginModal);
-        });
-
-        closeButtons.forEach((button) =>
-          button.addEventListener("click", closeModal)
-        );
-        document.querySelectorAll(".modal-overlay").forEach((overlay) => {
-          overlay.addEventListener("click", (event) => {
-            if (event.target === overlay) closeModal();
-          });
-        });
-        const recoveryEmailRequestView = recoveryModal.querySelector(
-          "#email-request-view"
-        );
-        const recoveryPasswordResetView = recoveryModal.querySelector(
-          "#password-reset-view"
-        );
-        const recoverySuccessView =
-          recoveryModal.querySelector("#success-view");
-        const recoveryEmailForm = recoveryModal.querySelector(
-          "#email-request-form"
-        );
-        const recoveryResetForm = recoveryModal.querySelector(
-          "#password-reset-form"
-        );
-        const recoveryGoToLoginBtn =
-          recoveryModal.querySelector("#go-to-login-btn");
-        function showRecoveryView(viewToShow) {
-          recoveryEmailRequestView.classList.add("hidden-view");
-          recoveryPasswordResetView.classList.add("hidden-view");
-          recoverySuccessView.classList.add("hidden-view");
-          viewToShow.classList.remove("hidden-view");
         }
-        recoveryEmailForm.addEventListener("submit", (e) => {
-          e.preventDefault();
-          console.log("Solicitando...");
-          showRecoveryView(recoveryPasswordResetView);
-        });
-        recoveryResetForm.addEventListener("submit", (e) => {
-          e.preventDefault();
-          console.log("Actualizando...");
-          showRecoveryView(recoverySuccessView);
-        });
-        recoveryGoToLoginBtn.addEventListener("click", () => {
-          closeModal();
-          openModal(loginModal);
+
+        closeButtons.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const targetId = btn.getAttribute("data-target");
+            document.getElementById(targetId).classList.add("hidden");
+          });
         });
 
-        window.handleRoleLogin = function (role) {
-          const email = loginModal.querySelector("#emailLogin").value;
-          const pass = loginModal.querySelector("#passLogin").value;
-          if (!email || !pass) {
-            alert("Ingresa datos.");
-            return;
-          }
-          if (role === "admin") {
-            alert(`Login Admin: ${email}`);
-            closeModal();
-          } else {
-            alert(`Login Cliente: ${email}`);
-            closeModal();
-          }
-        };
-        loginModal
-          .querySelector("#login-form")
-          .addEventListener("submit", (e) => {
-            e.preventDefault();
-            handleRoleLogin("cliente");
+        [loginModal, recoveryModal].forEach((modal) => {
+          modal.addEventListener("click", (e) => {
+            if (e.target === modal) closeModal(modal);
           });
+        });
+
+        if (forgotPassBtn) {
+          forgotPassBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            closeModal(loginModal);
+            openModal(recoveryModal);
+          });
+        }
+
+        backToLoginBtns.forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            closeModal(recoveryModal);
+            openModal(loginModal);
+          });
+        });
+
+        if (cancelRecBtn) {
+          cancelRecBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            // Resetear pasos a paso 1
+            document.getElementById("rec-step-1").classList.remove("hidden");
+            document.getElementById("rec-step-2").classList.add("hidden");
+            document.getElementById("rec-step-3").classList.add("hidden");
+            // Limpiar formularios
+            document.getElementById("rec-form-step-1").reset();
+            document.getElementById("rec-form-step-2").reset();
+          });
+        }
+
+        // === LÓGICA DE LOGIN (Usando API) ===
+        const loginForm = document.getElementById("login-form");
+        if (loginForm) {
+          loginForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("emailLogin").value;
+            const pass = document.getElementById("passLogin").value;
+            const btn = loginForm.querySelector("button[type='submit']");
+
+            try {
+              btn.innerText = "Verificando...";
+              btn.disabled = true;
+
+              if (typeof API !== "undefined") {
+                // 1. Llamar a API.login
+                const user = await API.login(email, pass);
+
+                // 2. Guardar en localStorage
+                localStorage.setItem("userRole", user.role);
+                localStorage.setItem("userName", user.name);
+
+                alert(`¡Bienvenido ${user.name || user.email}!`);
+
+                // 3. Actualizar menú globalmente usando la función de menu_logic.js
+                if (window.updateNavbar) window.updateNavbar();
+
+                // 4. Cerrar modal
+                closeAllModals();
+                // Recargar opcional para asegurar limpieza
+                // window.location.reload();
+              } else {
+                alert("Error crítico: API no cargada. Revisa api.js");
+              }
+            } catch (error) {
+              alert(error.message);
+            } finally {
+              btn.innerText = "Ingresar";
+              btn.disabled = false;
+            }
+          });
+        }
+
+        // === LÓGICA DE REGISTRO (IN-PLACE EN HOME) ===
+        const registerModal = document.getElementById("register-modal");
+        const openRegisterLink = document.getElementById("link-open-register");
+        const registerFormHome = document.getElementById("register-form-home");
+
+        if (openRegisterLink) {
+          openRegisterLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            closeAllModals();
+            openModal(registerModal);
+          });
+        }
+
+        if (registerFormHome) {
+          registerFormHome.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const name = document.getElementById("nameRegisterHome")
+              ? document.getElementById("nameRegisterHome").value.trim()
+              : "";
+            const email = document
+              .getElementById("emailRegisterHome")
+              .value.trim();
+            const pass = document.getElementById("passRegisterHome").value;
+            const btn = registerFormHome.querySelector("button[type='submit']");
+
+            console.log("Register form submit", { name, email });
+
+            try {
+              btn.innerText = "Registrando...";
+              btn.disabled = true;
+
+              if (typeof API !== "undefined") {
+                let res;
+                try {
+                  res = await API.register(name, email, pass);
+                  console.log("API.register response:", res);
+                } catch (apiErr) {
+                  console.error("API.register error:", apiErr);
+                  throw apiErr;
+                }
+
+                const user = res && (res.user || res);
+
+                if (user) {
+                  try {
+                    const u = user.user || user;
+                    if (res && res.token)
+                      localStorage.setItem("authToken", res.token);
+                    localStorage.setItem("userRole", u.role || "customer");
+                    localStorage.setItem("userName", u.name || u.email);
+                  } catch (e) {
+                    console.warn("Error saving user data locally", e);
+                  }
+
+                  alert(
+                    `¡Registro exitoso! Bienvenido ${
+                      user.name || user.email || (res.user && res.user.email)
+                    }`
+                  );
+                  if (window.updateNavbar) window.updateNavbar();
+                  closeAllModals();
+                } else {
+                  alert((res && res.message) || "Registro completado.");
+                  closeAllModals();
+                }
+              } else {
+                alert("Error crítico: API no cargada. Revisa api.js");
+              }
+            } catch (error) {
+              console.error("Register handler error:", error);
+              alert(error.message || "Error en registro");
+            } finally {
+              btn.innerText = "Registrarse";
+              btn.disabled = false;
+            }
+          });
+        }
+
+        // === LÓGICA DE RECUPERACIÓN (BACKEND REAL) ===
+        const recForm1 = document.getElementById("rec-form-step-1");
+        const recForm2 = document.getElementById("rec-form-step-2");
+        let recoveryEmail = "";
+
+        if (recForm1) {
+          recForm1.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("rec-email").value.trim();
+            const btn = recForm1.querySelector("button[type='submit']");
+
+            try {
+              btn.innerText = "Buscando...";
+              btn.disabled = true;
+
+              if (typeof API !== "undefined") {
+                // Llamar al backend para generar y enviar token por correo
+                const res = await API.requestPasswordReset(email);
+                console.log("requestPasswordReset response:", res);
+
+                // Guardar email para paso 2
+                recoveryEmail = email;
+                document.getElementById("rec-display-email").textContent =
+                  email;
+
+                // Mostrar paso 2 con mensaje de token por correo
+                document.getElementById("rec-step-1").classList.add("hidden");
+                document
+                  .getElementById("rec-step-2")
+                  .classList.remove("hidden");
+                document.getElementById("rec-step-2").classList.add("fade-in");
+
+                alert(
+                  "Hemos enviado un token a tu correo. Intenta en 15 minutos."
+                );
+              } else {
+                alert("Error crítico: API no cargada. Revisa api.js");
+              }
+            } catch (error) {
+              console.error("requestPasswordReset error:", error);
+              alert(error.message || "Error al buscar cuenta");
+            } finally {
+              btn.innerText = "Buscar Cuenta";
+              btn.disabled = false;
+            }
+          });
+        }
+
+        if (recForm2) {
+          recForm2.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const token = document
+              .getElementById("rec-input-code")
+              .value.trim();
+            const pass1 = document.getElementById("rec-new-pass").value;
+            const pass2 = document.getElementById("rec-confirm-pass").value;
+            const btn = recForm2.querySelector("button[type='submit']");
+
+            if (pass1 !== pass2) {
+              alert("Las contraseñas no coinciden.");
+              return;
+            }
+
+            try {
+              btn.innerText = "Cambiando...";
+              btn.disabled = true;
+
+              if (typeof API !== "undefined") {
+                // Llamar al backend para cambiar contraseña
+                const res = await API.resetPassword(token, pass1);
+                console.log("resetPassword response:", res);
+
+                // Mostrar paso 3 (éxito)
+                document.getElementById("rec-step-2").classList.add("hidden");
+                document
+                  .getElementById("rec-step-3")
+                  .classList.remove("hidden");
+                document.getElementById("rec-step-3").classList.add("fade-in");
+              } else {
+                alert("Error crítico: API no cargada. Revisa api.js");
+              }
+            } catch (error) {
+              console.error("resetPassword error:", error);
+              alert(
+                error.message ||
+                  "Error al cambiar contraseña. Token inválido o expirado."
+              );
+            } finally {
+              btn.innerText = "Cambiar Contraseña";
+              btn.disabled = false;
+            }
+          });
+        }
       });
     </script>
   </body>

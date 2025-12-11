@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Backup - B02-Inicio_seccion</title>
+  </head>
+  <body>
+    <!-- Copia de seguridad del archivo original B02-Inicio_seccion.html -->
+    <!-- Fecha de archivo: 2025-12-10 -->
+
+    <!-- Contenido original a continuación -->
+
+    <!DOCTYPE html>
+    <html lang="es">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Iniciar Sesión - Malasa</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Open+Sans:wght@400;600&display=swap"
+          rel="stylesheet"
+        />
+        <style>
+          :root {
+            --color-primario: #ff9933;
+            --color-secundario: #8b4513;
+            --color-fondo: #fff8e1;
+            --color-texto: #4a2e2a;
+            --color-fondo-pagina: #f0f0f0;
+            --fuente-titulos: "Lora", serif;
+            --fuente-cuerpo: "Open Sans", sans-serif;
+          }
+
+          body {
+            font-family: var(--fuente-cuerpo);
+            background-color: var(--color-fondo-pagina);
+            color: var(--color-texto);
+            margin: 0;
+            padding: 2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+          }
+
+          .container {
+            width: 100%;
+            max-width: 400px; /* Un poco más estrecho para verse moderno */
+          }
+          .card {
+            background-color: var(--color-fondo);
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+          }
+          .card-body {
+            padding: 2.5em;
+            text-align: center;
+          }
+          .card-title {
+            font-family: var(--fuente-titulos);
+            color: var(--color-secundario);
+            font-weight: 600;
+            font-size: 2em;
+            margin-bottom: 1.5em;
+          }
+
+          .form-floating {
+            position: relative;
+            margin-bottom: 1.5rem;
+          }
+          .form-control {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+          }
+          .form-control:focus {
+            outline: none;
+            border-color: var(--color-primario);
+            box-shadow: 0 0 5px rgba(255, 153, 51, 0.5);
+          }
+          .form-floating label {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            color: #aaa;
+            pointer-events: none;
+            transition: all 0.2s ease-in-out;
+          }
+          .form-control:focus + label,
+          .form-control:not(:placeholder-shown) + label {
+            top: -0.75rem;
+            left: 0.75rem;
+            font-size: 0.8rem;
+            background-color: var(--color-fondo);
+            padding: 0 0.25rem;
+            color: var(--color-secundario);
+          }
+          .forgot-password {
+            display: block;
+            text-align: right;
+            font-size: 0.9em;
+            margin-bottom: 1.5rem;
+            color: var(--color-secundario);
+            text-decoration: none;
+          }
+          .forgot-password:hover {
+            text-decoration: underline;
+          }
+
+          .btn-primary {
+            background-color: var(--color-secundario);
+            border: none;
+            border-radius: 25px;
+            padding: 0.8em;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-bottom: 1.5em;
+          }
+          .btn-primary:hover {
+            background-color: #6a350f;
+            transform: scale(1.03);
+          }
+          .btn-primary:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+          }
+
+          .register-link {
+            margin-top: 1em;
+            font-size: 0.9em;
+          }
+          .register-link a {
+            color: var(--color-secundario);
+            font-weight: 600;
+            text-decoration: none;
+          }
+          .register-link a:hover {
+            text-decoration: underline;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">Iniciar Sesión</h3>
+
+              <form id="login-form">
+                <div class="form-floating">
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="emailLogin"
+                    placeholder=" "
+                    required
+                  />
+                  <label for="emailLogin">Correo Electrónico</label>
+                </div>
+                <div class="form-floating">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="passLogin"
+                    placeholder=" "
+                    required
+                  />
+                  <label for="passLogin">Contraseña</label>
+                </div>
+                <!-- Idealmente esto llevaría a una página de recuperar pass -->
+                <a href="#" onclick="recuperarPass()" class="forgot-password"
+                  >¿Olvidaste tu contraseña?</a
+                >
+
+                <button class="btn-primary" type="submit">Ingresar</button>
+              </form>
+
+              <!-- Se eliminaron los botones de selección de rol manual -->
+
+              <div class="register-link">
+                <small
+                  >¿No tienes una cuenta?
+                  <a href="B01-Formulario_de_registro.html"
+                    >Regístrate Aquí</a
+                  ></small
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. IMPORTAMOS API.JS -->
+        <script src="js/api.js"></script>
+
+        <script>
+          // Si `login_handler.js` existe se encargará del submit centralizado.
+          const loginForm = document.getElementById("login-form");
+
+          async function procesarLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("emailLogin").value;
+            const pass = document.getElementById("passLogin").value;
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+
+            try {
+              // Feedback visual
+              submitBtn.innerText = "Verificando...";
+              submitBtn.disabled = true;
+
+              // LLAMADA AL BACKEND
+              const user = await API.login(email, pass);
+
+              // Guardamos datos críticos para la navegación
+              if (user && user.token)
+                localStorage.setItem("authToken", user.token);
+              localStorage.setItem("userRole", user.role);
+              localStorage.setItem("userName", user.name || user.email);
+              try {
+                localStorage.setItem("userData", JSON.stringify(user));
+              } catch (e) {}
+
+              alert(`¡Bienvenido/a ${user.name || "Usuario"}!`);
+
+              // Redirección inteligente
+              if (user.role === "admin" || user.role === "developer") {
+                // Si es admin, podríamos mandarlo al panel directo, o al home.
+                // Vamos al home, y allá el menú le mostrará el botón de "Panel Admin"
+                window.location.href = "index.html";
+              } else {
+                window.location.href = "index.html";
+              }
+            } catch (error) {
+              console.error(error);
+              alert("Error: " + error.message);
+              submitBtn.innerText = "Ingresar";
+              submitBtn.disabled = false;
+            }
+          }
+
+          loginForm.addEventListener("submit", procesarLogin);
+
+          // Pequeño helper para el link de olvidar contraseña
+          async function recuperarPass() {
+            const email = prompt(
+              "Ingresa tu email para recuperar la contraseña:"
+            );
+            if (email) {
+              try {
+                // Asumiendo que tienes esta función en api.js o haces el fetch aquí
+                // await API.requestPasswordReset(email);
+                alert(
+                  "Si el correo existe, te hemos enviado un link (Revisa la consola del backend)."
+                );
+              } catch (e) {
+                alert(e.message);
+              }
+            }
+          }
+        </script>
+      </body>
+    </html>
+  </body>
+</html>

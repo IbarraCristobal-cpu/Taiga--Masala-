@@ -30,16 +30,6 @@
         font-family: var(--fuente-cuerpo);
         background-color: var(--color-fondo-pagina);
         color: var(--color-texto);
-        margin: 0;
-      }
-
-      .navbar {
-        background-color: var(--color-surface);
-        padding: 0.5rem 1rem;
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-        position: sticky;
-        top: 0;
-        z-index: 100;
       }
       .navbar-container {
         width: 100%;
@@ -79,6 +69,9 @@
       .nav-link.active,
       .nav-link:hover {
         color: var(--color-primario);
+      }
+      #nav-btn-admin {
+        color: #d32f2f;
       }
 
       .main-container {
@@ -147,14 +140,15 @@
         font-weight: 600;
       }
 
-      /*  Sección Carrito */
+      /* Sección Carrito */
       .sidebar-cart {
-        background-color: var(--color-fondo);
+        background-color: var(--color-surface);
         padding: 1em;
         border-radius: 8px;
         margin-top: 1.5em;
         text-align: center;
         border: 1px solid var(--color-borde-ligero);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       }
       .sidebar-cart p {
         margin: 0 0 0.8em 0;
@@ -183,7 +177,7 @@
       }
       .product-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
         gap: 1.5em;
       }
       .product-card {
@@ -194,10 +188,15 @@
         display: flex;
         flex-direction: column;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+      }
+      .product-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       }
       .product-card img {
         width: 100%;
-        height: 150px;
+        height: 160px;
         object-fit: cover;
       }
       .card-body {
@@ -209,6 +208,7 @@
       .card-title {
         font-family: var(--fuente-titulos);
         margin: 0 0 0.2em 0;
+        font-size: 1.1em;
       }
       .card-price {
         color: var(--color-secundario);
@@ -245,9 +245,12 @@
         line-height: 1;
         font-weight: 700;
         cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
       .quantity-count {
-        font-size: 1.2em;
+        font-size: 1.1em;
         font-weight: 700;
         color: var(--color-texto);
       }
@@ -258,18 +261,91 @@
         text-align: center;
         padding: 1rem 1rem;
         margin-top: 3em;
+        color: white;
       }
-      .footer p {
-        margin: 0;
+
+      .loader {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid var(--color-primario);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 50px auto;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Modales importados */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s;
+      }
+      .modal-overlay.hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .modal-card {
+        background-color: #fff8e1;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 500px;
+        padding: 2.5em;
+        text-align: center;
+        position: relative;
+      }
+      .close-modal-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 2rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+      .modal-card .form-control {
+        width: 100%;
+        padding: 1rem;
+        margin-bottom: 1em;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+      .modal-card .btn-primary {
+        width: 100%;
+        padding: 0.8em;
+        background: #8b4513;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
       }
     </style>
   </head>
+
   <body>
     <nav class="navbar">
       <div class="navbar-container">
         <a class="navbar-brand" href="#">
-          <img src="images/Logo/flor.jpg" alt="Logo Malasa" />
-          Masala
+          <img src="images/Logo/flor.jpg" alt="Logo Masala" />
+          Malasa
         </a>
         <ul class="navbar-nav">
           <li><a class="nav-link" href="B07-Home.html">Home</a></li>
@@ -282,8 +358,33 @@
             >
           </li>
           <li>
-            <a class="nav-link" href="B08_B09-Perfil_de_usuario.html"
+            <a class="nav-link" id="nav-btn-login" href="#">Iniciar Sesión</a>
+          </li>
+          <li>
+            <a
+              class="nav-link"
+              id="nav-btn-profile"
+              href="B08_B09-Perfil_de_usuario.html"
+              style="display: none"
               >Mi Perfil</a
+            >
+          </li>
+          <li>
+            <a
+              class="nav-link"
+              id="nav-btn-admin"
+              href="B17-Gestion_de_Productos.html"
+              style="display: none"
+              >Panel Admin</a
+            >
+          </li>
+          <li>
+            <a
+              class="nav-link"
+              id="nav-btn-logout"
+              href="B07-Home.html"
+              style="display: none"
+              >Salir</a
             >
           </li>
         </ul>
@@ -294,8 +395,12 @@
       <aside class="sidebar">
         <h2>Menú</h2>
         <div class="search-group">
-          <input type="text" placeholder="¿Qué quieres pedir?" />
-          <button>🔍</button>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="¿Qué quieres pedir?"
+          />
+          <button id="search-btn">🔍</button>
         </div>
 
         <div class="sidebar-cart">
@@ -304,7 +409,7 @@
             >Ver Carrito</a
           >
         </div>
-        <ul class="category-nav">
+        <ul class="category-nav" id="category-nav">
           <li>
             <a class="category-link active" data-category="Todos"
               >Todos los Platos</a
@@ -333,159 +438,240 @@
 
       <main class="product-catalog">
         <h3 id="category-title" class="category-title">Todos los Platos</h3>
+        <div id="loader" class="loader"></div>
         <div id="product-grid" class="product-grid"></div>
       </main>
     </div>
 
     <footer class="footer">
-      <p></p>
+      <p>© 2024 Restaurante Malasa. Todos los derechos reservados.</p>
     </footer>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const products = [
-          {
-            id: 1,
-            name: "Samosa",
-            price: 8400,
-            description:
-              "Empanadillas de fina masa rellenas de papas y verduras.",
-            category: "Entradas",
-            image: "images/Entradas/4.jpg",
-          },
-          {
-            id: 2,
-            name: "Jheenga Koliwada",
-            price: 13000,
-            description:
-              "Camarones ecuatorianos apanados y marinados en masala.",
-            category: "Entradas",
-            image: "images/Entradas/2.jpg",
-          },
-          {
-            id: 3,
-            name: "Chana Pindi Batura",
-            price: 14400,
-            description: "Garbanzos en masala servidos en salsa de cebolla",
-            category: "Platos Principales",
-            image: "images/Vegetarianos/1.jpg",
-          },
-          {
-            id: 4,
-            name: "Murgh Mitha Suthra",
-            price: 12500,
-            description:
-              "Pollo macerado en deliciosa crema de almendras y coco.",
-            category: "Platos Principales",
-            image: "images/Pollo/3.jpg",
-          },
-          {
-            id: 5,
-            name: "Gajjar ka halwa",
-            price: 5000,
-            description: "Suave postre de zanahorias con almendras.",
-            category: "Postres",
-            image: "images/Postres/1.jpg",
-          },
-          {
-            id: 6,
-            name: "Gulab jamun",
-            price: 5000,
-            description:
-              "Bolitas de masa de leche, fritas en salsa de almibar.",
-            category: "Postres",
-            image: "images/Postres/2.webp",
-          },
-          {
-            id: 7,
-            name: "Leche de rosas",
-            price: 6000,
-            description:
-              "Bebida delicada y aromática que combina leche y rosas.",
-            category: "Jugos",
-            image: "images/JugosNaturales/Leche_de_Rosas.jpg",
-          },
-          {
-            id: 8,
-            name: "Masala Chai",
-            price: 4500,
-            description:
-              "Té negro de alta calidad con una mezcla aromática de especias.",
-            category: "Jugos",
-            image: "images/JugosNaturales/Masala_Chai.jpg",
-          },
-        ];
+    <!-- MODAL DE LOGIN REUTILIZABLE -->
+    <div id="login-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <button class="close-modal-btn">&times;</button>
+        <h3 style="color: #8b4513; margin-bottom: 1em">Iniciar Sesión</h3>
+        <form id="login-form">
+          <input
+            type="email"
+            class="form-control"
+            id="emailLogin"
+            required
+            placeholder="Correo Electrónico"
+          />
+          <input
+            type="password"
+            class="form-control"
+            id="passLogin"
+            required
+            placeholder="Contraseña"
+          />
+          <a
+            href="B03-Recuperar_Contraseña.html"
+            style="
+              display: block;
+              text-align: right;
+              margin-bottom: 1em;
+              color: #8b4513;
+            "
+            >¿Olvidaste tu contraseña?</a
+          >
+          <button class="btn-primary" type="submit">Ingresar</button>
+        </form>
+        <div style="margin-top: 1em">
+          <small
+            >¿No tienes una cuenta?
+            <a href="B01-Formulario_de_registro.html" style="color: #8b4513"
+              >Regístrate Aquí</a
+            ></small
+          >
+        </div>
+      </div>
+    </div>
 
-        const cartCountElement = document.getElementById("cart-count");
-        const productGrid = document.getElementById("product-grid");
-        const categoryNav = document.querySelector(".category-nav");
-        const categoryTitle = document.getElementById("category-title");
+    <script src="api.js"></script>
+    <script src="menu_logic.js"></script>
+    <script src="login_handler.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        // --- ESTADO Y VARIABLES ---
+        let allProducts = [];
         let totalCartItems = 0;
-        const renderProducts = (filterCategory = "Todos") => {
+
+        const productGrid = document.getElementById("product-grid");
+        const categoryNav = document.getElementById("category-nav");
+        const categoryTitle = document.getElementById("category-title");
+        const cartCountElement = document.getElementById("cart-count");
+        const loader = document.getElementById("loader");
+        const searchInput = document.getElementById("search-input");
+        const searchBtn = document.getElementById("search-btn");
+
+        // --- INICIALIZAR ---
+        await loadProducts();
+        updateCartCount();
+
+        // --- FUNCIONES ---
+
+        async function loadProducts() {
+          loader.style.display = "block";
           productGrid.innerHTML = "";
-          const productsToRender =
-            filterCategory === "Todos"
-              ? products
-              : products.filter((p) => p.category === filterCategory);
-          if (productsToRender.length === 0) {
-            productGrid.innerHTML = "<p>No hay productos...</p>";
+          try {
+            // Obtener datos reales de la API (sincronizados con Admin)
+            allProducts = await API.getProducts();
+            renderProducts("Todos");
+          } catch (error) {
+            productGrid.innerHTML =
+              "<p>Error cargando el menú. Intente más tarde.</p>";
+            console.error(error);
+          } finally {
+            loader.style.display = "none";
+          }
+        }
+
+        function renderProducts(filterCategory) {
+          productGrid.innerHTML = "";
+          let filtered = allProducts;
+
+          if (filterCategory !== "Todos") {
+            filtered = allProducts.filter((p) => p.category === filterCategory);
+          }
+
+          if (filtered.length === 0) {
+            productGrid.innerHTML =
+              "<p>No se encontraron productos en esta categoría.</p>";
             return;
           }
-          productsToRender.forEach((product) => {
+
+          filtered.forEach((product) => {
+            // Formato de precio chileno
+            const priceFmt = new Intl.NumberFormat("es-CL", {
+              style: "currency",
+              currency: "CLP",
+            }).format(product.price);
+
             const card = document.createElement("div");
             card.className = "product-card";
             card.innerHTML = `
-                <img src="${product.image}" alt="${product.name}">
-                <div class="card-body">
-                    <h5 class="card-title">${product.name}</h5>
-                    <p class="card-price">${new Intl.NumberFormat("es-CL", {
-                      style: "currency",
-                      currency: "CLP",
-                    }).format(product.price)}</p>
-                    <p class="card-description">${product.description}</p>
-                    <div class="product-actions">
-                        <div class="quantity-selector">
-                            <button class="quantity-btn" data-action="decrease">-</button>
-                            <span class="quantity-count">0</span>
-                            <button class="quantity-btn" data-action="increase">+</button>
+                    <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/200?text=Sin+Imagen'">
+                    <div class="card-body">
+                        <h5 class="card-title">${product.name}</h5>
+                        <p class="card-price">${priceFmt}</p>
+                        <p class="card-description">${product.description}</p>
+                        <div class="product-actions">
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" onclick="updateCartItem(${product.id}, -1)">-</button>
+                                <span class="quantity-count" id="qty-${product.id}">0</span>
+                                <button class="quantity-btn" onclick="updateCartItem(${product.id}, 1)">+</button>
+                            </div>
                         </div>
-                    </div>
-                </div>`;
+                    </div>`;
             productGrid.appendChild(card);
           });
+          // Restaurar cantidades si ya hay algo en el carrito
+          syncQuantities();
+        }
+
+        function updateCartCount() {
+          // Calcular total de items en el carrito local
+          const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+          totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+          if (cartCountElement) cartCountElement.textContent = totalCartItems;
+        }
+
+        function syncQuantities() {
+          const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+          cart.forEach((item) => {
+            const qtySpan = document.getElementById(`qty-${item.productId}`);
+            if (qtySpan) qtySpan.textContent = item.quantity;
+          });
+        }
+
+        // --- EXPORTAR FUNCIÓN GLOBAL PARA BOTONES ---
+        window.updateCartItem = (productId, change) => {
+          let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+          const existingItem = cart.find((i) => i.productId === productId);
+          const qtySpan = document.getElementById(`qty-${productId}`);
+
+          if (existingItem) {
+            existingItem.quantity += change;
+            if (existingItem.quantity <= 0) {
+              cart = cart.filter((i) => i.productId !== productId);
+              if (qtySpan) qtySpan.textContent = 0;
+            } else {
+              if (qtySpan) qtySpan.textContent = existingItem.quantity;
+            }
+          } else if (change > 0) {
+            cart.push({ productId, quantity: 1 });
+            if (qtySpan) qtySpan.textContent = 1;
+          }
+
+          localStorage.setItem("cart", JSON.stringify(cart));
+          updateCartCount();
         };
 
-        productGrid.addEventListener("click", (event) => {
-          if (event.target.classList.contains("quantity-btn")) {
-            const button = event.target;
-            const action = button.dataset.action;
-            const quantityCountElement =
-              button.parentElement.querySelector(".quantity-count");
-            let currentQuantity = parseInt(quantityCountElement.textContent);
-            if (action === "increase") {
-              currentQuantity++;
-              totalCartItems++;
-            } else if (action === "decrease" && currentQuantity > 0) {
-              currentQuantity--;
-              totalCartItems--;
-            }
-            quantityCountElement.textContent = currentQuantity;
-            cartCountElement.textContent = totalCartItems;
-          }
-        });
+        // --- EVENT LISTENERS ---
 
+        // 1. Navegación Categorías
         categoryNav.addEventListener("click", (event) => {
-          event.preventDefault();
           if (event.target.classList.contains("category-link")) {
-            const selectedCategory = event.target.dataset.category;
-            categoryTitle.textContent = event.target.textContent;
-            categoryNav.querySelector(".active").classList.remove("active");
+            // UI Update
+            document
+              .querySelectorAll(".category-link")
+              .forEach((l) => l.classList.remove("active"));
             event.target.classList.add("active");
-            renderProducts(selectedCategory);
+
+            // Logic
+            const cat = event.target.dataset.category;
+            categoryTitle.textContent = event.target.textContent;
+            renderProducts(cat);
           }
         });
 
-        renderProducts();
+        // 2. Buscador
+        searchBtn.addEventListener("click", () => {
+          const term = searchInput.value.toLowerCase();
+          const results = allProducts.filter((p) =>
+            p.name.toLowerCase().includes(term)
+          );
+
+          // Render manual de resultados de búsqueda
+          productGrid.innerHTML = "";
+          categoryTitle.textContent = `Resultados para "${term}"`;
+
+          if (results.length === 0) {
+            productGrid.innerHTML = "<p>No se encontraron productos.</p>";
+            return;
+          }
+
+          // Reutilizamos lógica de renderizado parcial
+          // Truco: filtrar allProducts temporalmente solo para usar renderProducts es complejo,
+          // mejor renderear directamente aquí o adaptar renderProducts.
+          // Para simplicidad, filtramos visualmente:
+          const prevAll = [...allProducts]; // backup
+          allProducts = results; // temporal replace
+          renderProducts("Todos");
+          allProducts = prevAll; // restore
+        });
+
+        // 3. Login Modal (Lógica simple)
+        const loginBtn = document.getElementById("nav-btn-login");
+        const loginModal = document.getElementById("login-modal");
+        const closeBtns = document.querySelectorAll(".close-modal-btn");
+
+        if (loginBtn) {
+          loginBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            loginModal.classList.remove("hidden");
+          });
+        }
+        closeBtns.forEach((btn) =>
+          btn.addEventListener("click", () => {
+            loginModal.classList.add("hidden");
+          })
+        );
+
+        // Login ahora gestionado por `login_handler.js` (handler centralizado)
       });
     </script>
   </body>
